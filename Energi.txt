@@ -1,0 +1,100 @@
+
+pooling e paralelismo 
+certificado no POSTMAN, no Java e no Chrome
+CRLF vs LF (windows vs linux). 
+aprendizato de temp file e tmp nas variavies de usuario do sistema Windows
+cherry pick
+como importar um arquivo texto normal para o eclipse
+Windows: software center
+Windows: services (para ver quais processos estao rodando, como rabbitmq por exemplo)
+x-correlation-id
+No Maven, se vc quiser fazer o download novamente de todas as dependencias, soh eh preciso trocar o path .m2\repository por outro nome, como .m2\repository-old 
+single active consumer (SAC) no rabbitmq
+jenkins tem seu proprio servidor (nao visivel para devs)
+
+conexao com event store (similar a uma conexao de base de dados)
+.bat file no windows
+macro no notepad++
+log4j2 eh usado no mule
+tag no bitbucket
+propriedades colocadas em uma aplicacao que eh usada por uma dependencia do projeto dependencia
+
+conversor csv/json online: https://csvjson.com/
+Foi aqui que eu percebi a alteracao que precisava fazer para funcionar corretament o Bulk API.
+O payload abaixo tem o campo SVMXC__Skill_Set__c como um json em formato de String
+{"SVMXC__Skill_Set__c": "[  {    \"skillName\": \"009.A Lire un compteur\",    \"skillLevel\": 0,    \"skillId\": \"a2218000000y3F2AAI\",    \"isSkillMandatory\": true  },  {    \"skillName\": \"009.C Vérifier correspondance compteurs\",    \"skillLevel\": 0,    \"skillId\": \"a2218000000y3DaAAI\",    \"isSkillMandatory\": true  },  {    \"skillName\": \"009.D Ouvrir/Fermer vanne (BI, compteur)\",    \"skillLevel\": 0,    \"skillId\": \"a2218000000y3CwAAI\",    \"isSkillMandatory\": true  },  {    \"skillName\": \"009.F Vérifier fonct appareil -400 MBTUh\",    \"skillLevel\": 0,    \"skillId\": \"a2218000000y3IVAAY\",    \"isSkillMandatory\": true  }]"
+}
+Entretanto, no conversor do site, o escape character \" vira "" (dupla aspa) 
+A solucao eh colocar no dataweave a opcao escape="\"", dessa forma: output application/csv separator=", escape="\""
+
+
+
+****************************************************File manipulation with octet-streams etc**************************************
+files are passed on the internet as stream of bytes:
+
+-how to convert base64 stream to a file?
+ https://base64.guru/converter/decode/file
+ file here means the binaries. The site will provide you with a HEX DUMP and also an octet/stream conversion withouth the control characters (it displays a dot though)
+
+About octet/stream:
+ https://kb.iu.edu/d/agtj
+
+- What are the weird characters in a binary file
+  https://www.quora.com/What-are-the-weird-characters-onscreen-when-one-opens-an-exe-file-using-a-text-editor
+  tambem ha uma opcao de visualizacao dos control characters no Notepad++ 
+
+- what is an eight-bit byte 
+  https://en.wikipedia.org/wiki/Byte
+
+to send a file and get it on Spring, can use the MIME type multipart/form-data
+
+- how does linux identify the file type without the extension 
+  https://www.quora.com/How-does-Linux-identify-file-types-without-extensions-And-why-cant-Windows-do-so
+
+
+
+****************************************************oauth2**************************************
+- Em resumo: primeiro faz uma chamada para recuperar o token com o client_id e o client_credentials (Access Token URL). 
+  Depois pega o token e coloca na autorizacao como tipo Bearer nas chamadas subsequentes.
+  Na Energir o scope servia para identificar a aplicacao que iria ser chamada. Como Azure que emitia o token, era preciso tbem  dizer qual era a destinacao das chamadas subsequentes. De resto, os Roles eram configurados na Azure para cada clientId.  
+
+curso a ver sobre oauth2: https://www.udemy.com/course/learn-oauth-2/
+
+- can choose the oauth2 type in the authorization header in POSTMAN
+  can also choose grant_type:Client Credentials, if clientId or ClientSecret will be sent in the header as Basic Auth and the scope
+
+- how to get access_token with client credential scope
+  https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/
+  "Typically the service will allow either additional request parameters client_id and client_secret, or accept the client ID and secret in the HTTP Basic auth header."
+
+
+-example of sending the grant_type in the body as client_credentials
+  https://auth0.com/docs/api-auth/tutorials/client-credentials
+  here you can check the Content-Type needs to be application/x-www-form-urlencoded
+  
+- ver tbem videos sobre o assunto no javabrains: 
+  What is OAuth really all about: https://www.youtube.com/watch?v=t4-416mg6iU
+  and OAuth terminologies and flows explained: https://www.youtube.com/watch?v=3pZ3Nh8tgTE
+Ao final do segundo video, fala-se da aplicacao mais corrente do oauth2: O grant_type do tipo client_credentials, que serve para a comunicacao 
+microservice com microservice. Antes de fazer uma chamada ao microservice, chama-se o authorization server enviando o clientId e o clientSecret. O authorization server
+envia entao um token que depois eh utilizado para fazer as chamadas ao segundo microservico. Eu ACHO que existe uma especie de white list no segundo 
+microservico nesse modelo
+
+***************************************Encryption********************************
+
+Asymetric vs symetric encryption
+
+***************************************RabbitMQ********************************
+  
+Google: "Import definitions" in rabbitmq ui
+You will find links about API endpoints you can use in rabbit
+  https://www.rabbitmq.com/definitions.html
+  https://www.rabbitmq.com/backup.html 
+
+
+
+ 
+
+
+
+ 
