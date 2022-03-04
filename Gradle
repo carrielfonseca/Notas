@@ -1,0 +1,31 @@
+o que esse documento cobre:
+- conceito de task no gradle e alguns exemplos basicos como plugin, build.gradle (groovy e o build.gradle com kotlin)
+
+- como definir propriedades no gradle e como usa-las
+- como definir as dependencias no gradle
+- comandos basicos no gradle (gradle clean build = maven clean install)
+- qual o equivalente do target file onde vao os binarios do gradle e o jar
+- o gradle cache (ou repositorio local) e referencia de que usar o .m2 nao eh recomendavel
+- repositorios  (ao contrario do maven, geralmente fica no projeto mesmo, nao no setting.xml)
+- referencia de ordem de resolucao de conflitos de dependencias do gradle (diferente de mavenm, que usa o nearest definition)
+
+
+
+- como excluir um artefato no gradle
+- gradle bom: fazer uma comparacao com o spring cloud maven vs gradle (ver o release train)
+- spring maven plugin que eh usado para empacotar o projeto, tem como equivalente o que no gradle?
+- o gradle wrapper e para onde vai a distribuicao que eh baixada. colocar a referencia que achei
+
+-------------------------------------------------Alguns sites----------------------------------------------------------------------------------
+
+https://medium.com/@bherbst/understanding-the-gradle-wrapper-a62f35662ab7
+
+https://docs.gradle.org/current/userguide/command_line_interface.html
+
+https://stackoverflow.com/questions/10834111/gradle-store-on-local-file-system
+
+https://stackoverflow.com/questions/10834111/gradle-store-on-local-file-system
+
+https://docs.gradle.org/current/userguide/dependency_resolution.html
+
+https://tomgregory.com/how-to-exclude-gradle-dependencies/#:~:text=Kotlin%20where%20stated.-,Option%201)%20per%2Ddependency%20exclude%20rules,library%2C%20or%20more%20specifically%20com
