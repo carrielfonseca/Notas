@@ -372,6 +372,9 @@ see: https://kbroman.org/github_tutorial/pages/init.html
 - git push -u origin --all
 see https://www.git-tower.com/learn/git/commands/git-push
 
+config git na maquina: local, global and system
+https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config#:~:text=On%20windows%20this%20file%20can,on%20Windows%20Vista%20and%20newer
+
 /*******************************************Svn*********************************************/
 branch master eh a trunk no svn
 svn checkout, svn update (git pull and fetch), svn commit (git commit and push)
