@@ -253,6 +253,8 @@ Ctrl+alt+L	Format code
 em um projeto maven, right click e depois ver as opcoes de maven (para fazer o update dependencies que eu faco no eclipse)
 em um projeto gradle: nao esquecer de fazer "Reload All Gradle Projects" na tab do gradle
 
+Para configurar remote repos: Git -> Manage Remotes
+
 -------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------gradle----------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------
