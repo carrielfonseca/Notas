@@ -1,0 +1,423 @@
+como ver a arvore de resolucao de versao do maven e transferir para um arquivo texto (com opcao de fazer override do settings.xml):
+dependendy tree in maven
+
+./mvnw -s settings.xml dependency:tree > tree.txt
+./mvnw -s settings.xml dependency-check:aggregate
+-------------------------------------------------------
+Vulnerabilidades CVE (Common Vulnerability Exposure) no sonar e observar no maven repository
+Isso tudo vem da Owasp Foundation. Ha uma grande base de dados com as vulnerabilidades encontradas pelo Owasp
+Mudou um tanto minha maneira de ver de, se estah funcionando, nao mexer. No fundo, idealmente as bibliotecas devem estar em constante atualizacao para 
+que vulnerabilidades encontradas nao sejam exploradas
+----------------------------------------------------------
+Anotacao @ConditionalOnProperty do springboot (aprendi pela apresentacao do toggle)
+@ConditionalOnProperty(
+        value = "toggle.example.optionA",
+        havingValue = "true",
+        matchIfMissing = false)
+OU
+@ConditionalOnProperty(
+        value = "toggle.example.static.controller.optionA",
+        havingValue = "false",
+        matchIfMissing = true)
+----------------------------------------------------------------
+Como eles usam bastante a arquitetura dos profiles para fazer MockBeans
+@Profile para fazer o profile da classe
+E  @ActiveProfile para os testes (pode onfigurar isso no Intellij tbem)
+----------------------------------------------------------------
+@EventListener(ApplicationReadyEvent.class)
+Usado para fazer um PING de Health Check
+-----------------------------------------------------------------
+Intellij tem um UI para se conectar a uma base de dados. 
+Fazer View -> Tool Windows -> Database
+-----------------------------------------------------------------
+Intellij tem um UI para se conectar a um FTP (nao precisa de filezilla)
+Fazer View -> Tool Windows -> Remote Host
+-----------------------------------------------------------------------
+Concourse tem um boa secao para explicar a sintaxe de yaml:
+https://concourse-ci.org/config-basics.html
+ver secao objetos (uma linha e multiline)
+Comentario sobre ancoras no yaml (&my_anchor)
+"YAML anchor syntax can be used to avoid repetition within configuration"
+---------------------------------------------------------------------
+index de base de dados para deixar as coisas mais rapidas
+------------------------------------------------------------------------
+"what is a hook in programming"
+https://stackoverflow.com/questions/467557/what-is-meant-by-the-term-hook-in-programming
+"Essentially it's a place in code that allows you to tap in to a module to either provide different behavior or to react when something happens"
+No Spring, seriam coisas como @PostContruct etc
+-----------------------------------------------------------------------
+Cron expressions in splunk:
+https://docs.splunk.com/Documentation/SplunkCloud/8.2.2203/Alert/CronExpressions
+---------------------------------------------------------------------------------------
+Spring-dependencies no gradle: feito com um plugin: io.spring.dependency-management
+Pelo que entendi, faz o papel mais ou menos do spring-boot-starter-parent do maven, que traz o dependency magement de varios artefatos
+
+(tbem dah links respectivos para o maven and gradle)
+google: spring-boot-dependencies where is it used
+  https://docs.spring.io/spring-boot/docs/current/reference/html/using.html
+para o gradle: 
+  https://docs.spring.io/spring-boot/docs/2.7.4/gradle-plugin/reference/htmlsingle/#managing-dependencies
+"When you apply the io.spring.dependency-management plugin, Spring Boot’s plugin will automatically import the spring-boot-dependencies bom 
+from the version of Spring Boot that you are using"
+
+google: io.spring.dependency-management (o plugin que vi no build.gradle)
+  https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/
+"If you import more than one bom, the order in which the boms are imported can be important. The boms are processed in the order in which they are imported"
+"You have two options for configuring the plugin’s dependency management: 1-) Use the plugin’s DSL to configure dependency management directly
+                                                                          2-) Import one or more existing Maven boms."
+Also found: https://plugins.gradle.org/plugin/io.spring.dependency-management   (mostra a maneira mais basica de usar o plugin na secao plugins do buildscript)
+Na secao "Getting Started" da pagina do spring-boot gradle pluging, vemos que pode ser diferente: coloca o plugin org.springframework.boot e depois faz um apply apply plugin: 'io.spring.dependency-management'
+
+google: spring dependency management
+https://stackoverflow.com/questions/57717042/do-we-need-io-spring-dependency-management-gradle-plugin-when-already-using-id
+
+-------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------Tests Unitario--------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------
+
+Mockito cookbook Baeldung (verify, capture etc):https://www.baeldung.com/mockito-series
+Bom link para entender a utilidade do Captor: Getting Started with Mockito @Mock, @Spy, @Captor and @InjectMocks
+Tbem explica como dah para fazer o Captor programatically, ao inves de apenas uma anotacao
+
+
+google: how to autowire in spring tests
+achei um excelente artigo: https://www.arhohuttunen.com/spring-boot-unit-testing/
+Explica: 
+- anotacao @SpringBootTest
+- Por que deveriamos usar constructor injection ao inves de field injection (para poder instanciar os objetos do teste pour new Object). 
+  Alem disso, no caso do toggle, facilita muito para fazer os testes. Se nao estiver no constructor, normalmente usa-sse uma said de usar Reflections para fazer o unit test 
+- A propria documetacao do Spring recomenda usar objetos instanciados por new Object, e nao pelo container
+  "Dependency injection should make your code less dependent on the container than it would be with traditional Java EE development.
+  The POJOs that make up your application should be testable in JUnit or TestNG tests, with objects instantiated by using the new operator, without Spring or any other container."
+- Dah sua propria definicao do que eh um teste unitario 
+
+google: @RunWith(SpringRunner.class) in junit 5
+https://www.baeldung.com/junit-5-runwith
+"If we want to migrate this test to JUnit 5, we need to replace the @RunWith annotation with the new @ExtendWith:"
+nao se esquecer: usar @ExtendWith(MockitoExtension.class) : essa anotacao te dah varias funcionalidade e, se nao me engano, eh ela que permite usar anotacoes como @Captor, @Mock, @InjectMocks etc
+
+Anotacao @Parametrizedtests
+
+Entendi a diferenca entre Test Unitario Solitario et Social  (o social permite non-stubs, se limitando a dizer que o teste eh unitario se cada metodo de teste eh independente do outro)
+
+-------------------------------------------------------
+@ConfigurationProperties em uma bean (e nao na classe):
+https://stackoverflow.com/questions/43232021/using-configurationproperties-annotation-on-bean-method
+Repare que a classe DataSource dada no exemplo das resposta eh uma classe Java normal sem anotacao alguma
+-----------------------------------------------------
+Aprendi a usar o OpenApi (bem similar ao RAML)
+Tbem aprendi pelo metodo contract first que nao precisa colocar os @RequestMapping dos controllers na classe, mas sim na interface
+Doc: https://swagger.io/docs/specification/data-models/data-types/
+--------------------------------------------
+how to use a property in an annotation (you cant)
+
+-------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------Flyway e BD--------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------
+
+configuracao basica de uma BD: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#data.sql.datasource.configuration
+"DataSource configuration is controlled by external configuration properties in spring.datasource.*"
+basicamente, as 3 mais importantes sao: url, username e password (ler a secao "Data" da documentacao springboot)
+Tbem prestar atencao: "You should at least specify the URL by setting the spring.datasource.url property. Otherwise, Spring Boot tries to auto-configure an embedded database".
+  ou seja, melhor prestar atencao. Se a url nao estiver nas propriedades et a dependencia h2 (uma embedded database) nao estiver la, eh possivel que a producao utilise uma base h2 ao inves de algo pre pronto
+
+Tbem ver:
+https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto.data-initialization
+
+
+no comeco, soh colocando spring-boot-starter-data-jpa na dependencia, tem um erro:
+org.springframework.boot.autoconfigure.jdbc.DataSourceProperties$DataSourceBeanCreationException at DataSourceProperties.java:182
+Dando google no erro, achei: https://www.baeldung.com/spring-boot-failed-to-configure-data-source
+"For example, we haven't defined any JDBC connection properties, and we'll need to do so when working with external databases such as MySQL and MSSQL.
+ On the other hand, we won't face this issue with in-memory databases such as H2 since they can create a data source without all this information."
+Ou seja, adicionando h2 nas dependencias, ele configura para voce
+
+
+google no youtube: getting started with spring jpa  (video do Intellij interessante)
+https://www.youtube.com/watch?v=wuX2ESOy-Ts
+CommandLineRunner: Intellij (menciona o que botar nas dependencias?)
+
+
+--Flyway part--
+
+https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto.data-initialization.using-basic-sql-scripts
+"If you are using a Higher-level Database Migration Tool, like Flyway or Liquibase, you should use them alone to create and initialize the schema. 
+Using the basic schema.sql and data.sql scripts alongside Flyway or Liquibase is not recommended and support will be removed in a future release."
+
+google: flyway with spring boot
+boa introducao a logica do flyway: https://www.baeldung.com/database-migrations-with-flyway
+pasta com as versoes dos scripts sql etc
+explica a table flyway_history, que mantem as versoe, data de migracao e os checksums
+
+tbem ver: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto.data-initialization.migration-tool
+"To automatically run Flyway database migrations on startup, add the org.flywaydb:flyway-core to your classpath"
+
+------Flyway com sql server
+
+google: flywaydb.core.api.FlywayException: Unsupported Database: Microsoft SQL Server 15.0    
+https://stackoverflow.com/questions/70923478/flywayexception-unsupported-database-mariadb-10-5
+(precisa de uma dependencia especial para fazer o flyway)
+depois o stackoverflow leva para o link do flyway: https://flywaydb.org/documentation/database/mysql#java-usage
+entao alem do flyway-core, colocar <artifactId>flyway-sqlserver</artifactId>  nas dependencias
+
+google: is flyway migration folder recursive?
+https://flywaydb.org/blog/configure-resource-providers#:~:text=locations%20is%20set%20to%20a,needs%20to%20perform%20the%20migration.
+"locations is set to a folder, db/migration. Flyway will perform a recursive scan of this folder to search for the resources it needs to perform the migration"
+
+google: what is the default location of flyway scripts
+https://stackoverflow.com/questions/22819493/flyway-db-migration-folder#:~:text=By%20default%20Flyway%20will%20look,be%20anywhere%20on%20your%20disk.
+and then link to this: 
+https://flywaydb.org/documentation/concepts/migrations.html#discovery
+"This scanning is recursive. All migrations in non-hidden directories below the specified ones are also picked up."
+and: "Default: classpath:db/migration"
+
+
+
+google: sql server data source url example
+https://docs.microsoft.com/en-us/sql/connect/jdbc/building-the-connection-url?view=sql-server-ver16
+"The general form of the connection URL is ........."
+Depois pode ir aqui para ver as propriedades possiveis: https://learn.microsoft.com/en-us/sql/connect/jdbc/setting-the-connection-properties?view=sql-server-ver16
+
+google: sql server local docker
+dah uma bela receita para fazer um sql server docker: https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-docker-container-deployment?view=sql-server-ver16&pivots=cs1-bash
+Vah depois no link: Run the SQL Server 2019 container image with Docker
+"Your password should follow the SQL Server default password policy, otherwise the container can't set up SQL Server and will stop working. 
+By default, the password must be at least eight characters long and contain characters from three of the following four sets: uppercase letters, lowercase letters, base-10 digits, and symbols. 
+You can examine the error log by using the docker logs command."
+
+tive um problema com certificado no local que nao rodava no meu Intellij. Resolvi colocando trustServerCertificate=true na propriedade assim (ao lembro como tive a ideia):
+jdbc:sqlserver://localhost:1433;trustServerCertificate=true
+
+-------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------Spring Security with Oauth-----------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------
+
+https://spring.io/projects/spring-security-oauth#overview
+"The Spring Security OAuth project has reached end of life and is no longer actively maintained by VMware, Inc.
+This project has been replaced by the OAuth2 support provided by Spring Security and Spring Authorization Server."
+
+https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html
+"In a Spring Boot application, to specify which authorization server to use, simply do:"
+"Resource Server will use this property to further self-configure, discover the authorization server’s public keys, and subsequently validate incoming JWTs."
+Eh dessa forma entao que o token eh validado automaticamente
+
+Usam os escopos para definir acessos aos endpoits diferente da energir, que era mais para as aplicacoes et usavam a nocao de Roles
+Na biblioteca do spring security, os escopos sao prefixados por "SCOPE_". Exemplo: oc.fonseca.fabioappmodifier
+(Depois vou procurar a referencia na documentacao)
+
+Em dev, usam um grant_type que nunca tinha visto: urn:ietf:params:oauth:grant-type:jwt-bearer
+Resumo do flow: coloca no campo "assertion" da chamada o jwt E, no campo "scope", os escopos que voce gostaria para seu token. A separacao eh por espaco.
+
+
+Outros: 
+Google: oauth2 grant types
+https://athiththan11.medium.com/oauth-2-grant-types-a-story-guide-582580a3c4c2
+repare que as chamadas sembre colocam o clientId e o ClientSecret no Header nesse exemplo (podem ir tbem no body)
+
+Google: jwkseturi (vi a propriedade na configuracao da aplicacao)
+https://www.baeldung.com/spring-security-oauth-resource-server
+
+Google: oauth2ResourceServer
+https://docs.spring.io/spring-security/reference/servlet/oauth2/client/client-authentication.html
+
+-------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Intellij----------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------
+
+Set up basico pessoal quando comeca com Intellij:
+View/Appearance/ToolBar
+Tree Appearance / Flatten Packages
+Settings / Editor /General / Editor Tabs / Mark Modified tabs with Asterisk
+Check "Always Select Opened File" to synchronize the file
+File Settings -> Appearances	para mudar o theme para ficar claro
+Settings | Version Control | Commit, then enable Use non-modal commit interface  
+
+
+
+File -> Settings seems more like the Windows Preferences you have on Eclipse
+File -> Project Structure (para escolher o jdk e outras opcoes especificas do projeto)
+File -> New Project from Version Control  (para importar um repositorio no github)
+A tab git fica embaixo a esquerda e a branch sendo usada eh embaixo a direita
+a brach git 
+Tab Git on the left (Roll Back)
+Aziza me ensinou: como mudar o terminal do Intellij: File -> Setting -> Terminal e depois colocar: Shell Path = C:\Users\DXI9816\AppData\Local\Programs\Git\bin\bash.exe
+ctrl + shift +F	search for a word	
+ctrl + shift +N	search for a file	
+Alt+Right and Alt+Left to change tabs		
+ctrl+alt+f8 	inspeciona o elemento	https://stackoverflow.com/questions/18073545/eclipse-inspection-ctrl-shift-i-equivalent-in-intellij-idea-community-edi
+Navigate Method Hierarchy (ctrl + shift + H)		
+Navigate Call Hierarchy (ctrl+alt+H)	https://www.jetbrains.com/help/idea/viewing-structure-and-hierarchy-of-the-source-code.html	
+Ctrl + Alt + O	Organize imports	
+Ctrl+alt+L	Format code
+
+em um projeto maven, right click e depois ver as opcoes de maven (para fazer o update dependencies que eu faco no eclipse)
+em um projeto gradle: nao esquecer de fazer "Reload All Gradle Projects" na tab do gradle
+
+-------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------gradle----------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+
+Ver depois o que coloquei na documentacao dedicada exclusivamente ao gradle
+O equivalente do pom.xml no gradle eh o build.gradle 
+
+para ver as tasks do gradle, rodar comando:
+ ./gradlew tasks
+
+wrapper:
+https://medium.com/@bherbst/understanding-the-gradle-wrapper-a62f35662ab7
+"By default GRADLE_USER_HOME is ~/.gradle, so the wrapper will store Gradle distributions at ~/.gradle/wrapper/dists"
+No Windows: C:/Users/DXI9816/.gradle
+
+gradle local repo (.m2):
+https://stackoverflow.com/questions/10834111/gradle-store-on-local-file-system
+~/.gradle/caches/modules-2/files-2.1
+
+where is the jar localted when run gradle build  (o target folder do maven)
+https://stackoverflow.com/questions/21721119/creating-runnable-jar-with-gradle#:~:text=The%20result%20JAR%20will%20be,%2Flibs%2F%20directory%20by%20default.
+"The result JAR will be created in build/libs/ directory by default."
+
+https://docs.gradle.org/current/userguide/command_line_interface.html
+"Executing Gradle on the command-line conforms to the following structure. Options are allowed before and after task names.
+gradle [taskName...] [--option-name...]  "
+
+
+gradle vs maven:
+(colocar algum link aqui. tinha um equivalente de gradle install eu acho, mais precisa ter o mavenLocal como repo)
+
+
+dependency resolution in gradle:
+https://docs.gradle.org/current/userguide/dependency_resolution.html
+"Maven will take the shortest path to a dependency and use that version. In case there are multiple paths of the same length, the first one wins."
+"Gradle will consider all requested versions, wherever they appear in the dependency graph. Out of these versions, it will select the highest one."
+
+
+https://www.baeldung.com/gradle-dependency-management
+explica os types of configuration implementation, testImplementation, compileOnly etc  (scopes in maven)
+
+
+google: how to see dependency tree in gradle
+para ver a dependecyTree no gradle e entender de onde veio a versao do artefato:
+https://docs.gradle.org/current/userguide/viewing_debugging_dependencies.htmlinsigh
+./gradlew dependencies > ../debit-metier-dependencies.txt
+./gradlew dependencyInsight --dependency log4j-over-slf4j --configuration compile
+
+
+
+------Outros pontos interessantes:
+https://blog.gradle.org/introducing-compile-only-dependencies
+(ver anotacao do celular sobre isso)
+
+how to exclude transitive dependencies in gradle:
+(achar um link e botar aqui)
+
+no gradle, diferente do maven, que coloca a config de repositorio no settings.xml (um arquivo global), ele coloca diretamente no build.gradle na secao repositories.
+Ex: 
+repositories {
+    mavenLocal()
+    maven {
+        url = "$artifactoryRepoUrl"
+        credentials(HttpHeaderCredentials) {
+            name = "X-JFrog-Art-Api"
+            value = "$System.env.ARTIFACTORY_API_KEY"
+        }
+        authentication {
+            header(HttpHeaderAuthentication)
+        }
+    }
+}
+
+podemos ter propriedade no gradle no arquivo gradle.properties e usa-las depois no build.gradle ("$artifactoryRepoUrl")
+
+rodar gradle tasks pelo intellij
+https://www.jetbrains.com/idea/guide/tutorials/working-with-gradle/running-gradle-tasks/
+
+--------------------------permissoes no git-----------------------
+Descobi que tem algumas questoes de permissao no git que modificam os commits etc, mas nao vao mostrar nenhuma diff no arquivo em questao
+Para ver as permissoes dos arquivos (tem que ser 10755 para rodar o gradlew por exemplo)
+  git ls-files --stage
+Para dar permissao ao arquivo gradlew:
+  git update-index --chmod=+x gradlew
+
+-------------------------------Concourse (Competidor Jenkins)------------------
+Site oficial:https://concourse-ci.org/fly.html
+
+Conceitos basicos:
+Resources e resource types
+Jobs que sao formados de tasks e temos tbem o pipeline
+Alem disso, tbem podemos ter grupos, que vao formar diferentes abas no UI do concourse
+ResourceType: seria algo similar a uma classe Java
+Resource: seria algo similar a um objeto em Java
+
+
+------------------------------Remote Debugging--------------------------------------
+Vi pela primeira vez remote debugging: faz uma referencia apontando ao cloudfoundry
+---------------------------------------Docker---------------------------------------
+Revi o Docker hub et minha instalacao foi o Docker Desktop
+----------------------------------------------------------------------------------
+o == se comporta diferente entre testes unitarios et quando roda a aplicacao pelo controller
+Ou seja: NUNCA usar == , mas prestar atencao se for corrigir isso no codigo. Os testes unitarios NAO sao capazes de pegar esse problema
+----------------------------------------------------------------
+site de teste de Regex que Meryem achou: https://regex101.com/
+o que eh Redos (ataque de Regex): https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS
+---------------------------------------------Bibliografia interessante de criptografia mencionada------------------
+
+Apprendre la théorie
+Sujets généraux
+Cours « Cryptography I » de Coursera (Gratuit)
+Les vidéos de ce cours sont accessibles gratuitement en s’inscrivant en tant qu’auditeur libre. Les exercices et le certificat sont optionnels.
+
+https://www.coursera.org/learn/crypto#syllabus
+
+Livre « A Graduate Course in Applied Cryptography » (Gratuit)
+C’est un livre assez volumineux qui traite de pratiquement tous les aspects de la cryptographie appliquée. Pour digérer ce livre, il est recommandé d’en lire les sections au fur et à mesure qu’ils deviennent pertinents à comprendre.
+
+https://crypto.stanford.edu/~dabo/cryptobook/BonehShoup_0_4.pdf
+
+Livre « Cryptography Engineering - Design Principles and Practical Applications  » ($)
+Livre qui explique bien les concepts fondamentaux de la conception de protocole utilisant la cryptographie. 
+
+https://www.schneier.com/books/cryptography-engineering/ 
+
+Sujets spécifiques
+Protocole SSL/TLS
+Livre « Bulletproof SSL and TLS » ($)
+Lecture qui explique bien comment tous les mécanismes de SSL/TLS fonctionnent.
+
+https://www.feistyduck.com/books/bulletproof-ssl-and-tls/
+
+Papier « Lessons Learned From Previous SSL/TLS Attacks - A Brief Chronology Of Attacks And Weaknesses » (Gratuit)
+Lecture qui fait un bon résumé de toutes les attaques qui ont été faites sur le protocole SSL/TLS.
+
+https://kryptera.se/assets/uploads/2013/02/Lessons-Learned-From-Previous-SSLTLS-Attacks.pdf
+
+-----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+ 
+
