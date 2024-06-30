@@ -44,7 +44,7 @@ index de base de dados para deixar as coisas mais rapidas
 "what is a hook in programming"
 https://stackoverflow.com/questions/467557/what-is-meant-by-the-term-hook-in-programming
 "Essentially it's a place in code that allows you to tap in to a module to either provide different behavior or to react when something happens"
-No Spring, seriam coisas como @PostContruct etc
+No Spring, seriam coisas como @PostConstruct etc
 -----------------------------------------------------------------------
 Cron expressions in splunk:
 https://docs.splunk.com/Documentation/SplunkCloud/8.2.2203/Alert/CronExpressions

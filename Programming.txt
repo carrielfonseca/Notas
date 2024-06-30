@@ -133,7 +133,7 @@ Spring Events (Event, Listener and Publisher)
 Environment env;
 
 @Test: Indicates this is a test method to be run
-@RunWith: necesary annotation to run tests
+@RunWith: necesary annotation to run tests (In Junit 5, now it is @ExtendWith)
 @SpringApplicationConfiguration: specifies the configuration to be used in junit tests
 
 You can have a file for each environment you run (local, dev prod, staging etc) by using the name convention application-{profile}.properties. see:
@@ -178,7 +178,8 @@ Java: PATH: where you can actually find the command line commands (From what I u
             Moreover, on windows, the PATH variables will point to the jdk folder/bin (where the .exe files are)
             Look at: https://www.ntu.edu.sg/home/ehchua/programming/howto/Environment_Variables.html
             Error you get if the environment variable is not set in your operating system: 'javac' is not recognized as an internal or external command, operable program or batch file.
-      CLASSPATH: see github project about this.
+      CLASSPATH: see github project about this
+      (https://github.com/carrielfonseca/Java_Tool_Box_And_Challenges/blob/master/src/toolbox/TextFileReadFromClassPath.java).
  
 Command line:     
   javac Fabio.java: command line to compile
