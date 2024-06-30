@@ -204,6 +204,8 @@ Artigo interessante Property vs Environment variables
 https://www.baeldung.com/java-system-get-property-vs-system-getenv
 "To update System Properties at runtime, we use the System.setProperty method"
 "We can update Properties at runtime, while Environment Variables are an immutable copy of the Operating System’s variables."
+Exemplo no projeto pactglow : https://github.com/pactflow/example-provider-java-kafka/blob/master/src/test/java/io/pactflow/example/kafka/ProductsKafkaProducerTest.java
+
 
 ---
 
