@@ -1,4 +1,12 @@
+*********************************Arquitetura basica***************************************
 
+Com Mule aprendi o design basico e bem organizado:
+
+Uma config http para cada API que depois eh usada para fazer as chamadas
+Um Handler Global dos error, principalmente no nivel do API
+Os Mocks para os testes de cada flow (mock de http etc)
+
+******************************************************************************************
 pooling e paralelismo 
 certificado no POSTMAN, no Java e no Chrome
 CRLF vs LF (windows vs linux). 
