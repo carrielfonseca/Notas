@@ -256,6 +256,9 @@ em um projeto gradle: nao esquecer de fazer "Reload All Gradle Projects" na tab 
 Para configurar remote repos: Git -> Manage Remotes
 Para ver quem fez os commits: "Annotate with Git Blame"
 
+Quando voce cria um arquivo .sh no Intellij ele disponibiliza um botao play para rodar
+No nosso projeto, tinhamos um jar de wiremock que, se nao me engano, o Intellij tbem disponibilizava um botao para rodar
+
 -------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------gradle----------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------
