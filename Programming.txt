@@ -88,7 +88,7 @@ https://docs.spring.io/spring-boot/docs/3.2.x/
 injecting bean in another bean
 @Component: goes on top of classes. Means the class can be used as a bean to be injected. Other annotations define components as well, such as @Service, @Repository, @Controller
 @RequestMapping: maps the http request to the method that will be run
-@Autowired in constructor, in setter and in object. See http://www.baeldung.com/spring-autowire for different ways of injecting
+@Autowired in constructor, in setter and in object (field injection). See http://www.baeldung.com/spring-autowire for different ways of injecting
 IMPORTANT INSIGHT: when we inject a bean as a property, we cannot invoke this bean in the class constructor. If you need to do this, use the autowired directly in the constructor 
 @RequestBody and @ResponseBody: used to read/convert java objects into json objects (other formats can be used as well). Needs the Jackson library
                                 you can do do @RequestBody Map<String, Object> body for instance (or an object that can be mapped clearly)
@@ -117,6 +117,7 @@ class ApiServiceExceptionManagerAdvice {
 @ExceptionHandler(value = DeleteMemberException.class)
 @ResponseStatus(HttpStatus.CONFLICT)
 public ExceptionInfo handleDeleteMemberFromGroupNotAllowedException(HttpServletRequest req,  Exception e) {
+@PostConstructor: roda depois que a bean eh inicializada. Muito bom para debugar
 
 
 ObjectMapper: Classe para manipular json objects
