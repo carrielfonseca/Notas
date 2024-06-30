@@ -457,7 +457,8 @@ Mule: specify a Rest api contract (validation) etc
       specify a route via annotations (@RequestMapping and so forth)
       data transformation: xml to json
       routing tool (one component is spring cloud gateway)
-      the 3 tier architecture
+      the 3 tier architecture : experience (conecta ao API  (SAP, Salesforce etc)0), process (traduz em modelo canonico), orchestrator (faz as chamas API
+      e gerencia os erros)
       data composition
       data validation
       data composition      
