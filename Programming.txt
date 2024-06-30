@@ -462,7 +462,7 @@ Mule: specify a Rest api contract (validation) etc
       data validation
       data composition      
 
-      good modules: aggregator, objectstore (what else?), vm, idempotent, scater gatther, webservcies with soap.
+      good modules: aggregator, objectstore (what else?), vm, idempotent, scater gatther, webservices with soap.
 
       jaxb issue
 

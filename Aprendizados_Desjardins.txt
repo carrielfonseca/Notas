@@ -107,7 +107,7 @@ https://stackoverflow.com/questions/43232021/using-configurationproperties-annot
 Repare que a classe DataSource dada no exemplo das resposta eh uma classe Java normal sem anotacao alguma
 -----------------------------------------------------
 Aprendi a usar o OpenApi (bem similar ao RAML)
-Tbem aprendi pelo metodo contract first que nao precisa colocar os @RequestMapping dos controllers na classe, mas sim na interface
+Tbem aprendi pelo metodo contract first que nao precisa colocar os @RequestMapping dos controllers na classe, mas sim na interface (interessante)
 Doc: https://swagger.io/docs/specification/data-models/data-types/
 --------------------------------------------
 how to use a property in an annotation (you cant)
