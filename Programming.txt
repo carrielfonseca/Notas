@@ -72,6 +72,12 @@ The Publish/Subscribe pattern: https://en.wikipedia.org/wiki/Publish%E2%80%93sub
    https://spring.io/
 - To start any spring project, see:
    https://start.spring.io/
+- Spring boot documentation (very important):
+https://docs.spring.io/spring-boot/index.html
+https://docs.spring.io/spring-boot/docs/2.7.18/reference/html/
+- Spring boot odc registry com varias versoes (tem actuator por exemplo):
+https://docs.spring.io/spring-boot/docs/3.2.x/
+
 - Classic Eclipse Spring plugin: Spring Tool Suite 
 
 
@@ -100,6 +106,7 @@ IMPORTANT INSIGHT: when we inject a bean as a property, we cannot invoke this be
 @PostMapping(value = StudioUrl.INTEGRATIONS, params = { "!templateId", "!copyTo", "duplicatedId" }) //indicates OPTIONAL  Rest parameters. (!) means it does not have this paramenter
 
 @PropertySource //specifies a file to get the externalized properties from
+See: https://docs.spring.io/spring-boot/reference/features/external-config.html (properties order of precedence)
 @Import: used to centralize multiple @Configuration classes, like this: @Import({ ConnectServiceImportSelector.class, EnableConnectServicesRegistrar.class, ServiceDefintitionRegistrar.class })
          see https://stackoverflow.com/questions/35502164/what-is-the-use-case-of-import-annotation
 
