@@ -84,7 +84,7 @@ google: how to autowire in spring tests
 achei um excelente artigo: https://www.arhohuttunen.com/spring-boot-unit-testing/
 Explica: 
 - anotacao @SpringBootTest
-- Por que deveriamos usar constructor injection ao inves de field injection (para poder instanciar os objetos do teste pour new Object). 
+- Por que deveriamos usar constructor injection ao inves de field injection (para poder instanciar os objetos do teste por new Object).
   Alem disso, no caso do toggle, facilita muito para fazer os testes. Se nao estiver no constructor, normalmente usa-sse uma said de usar Reflections para fazer o unit test 
 - A propria documetacao do Spring recomenda usar objetos instanciados por new Object, e nao pelo container
   "Dependency injection should make your code less dependent on the container than it would be with traditional Java EE development.
@@ -96,9 +96,10 @@ https://www.baeldung.com/junit-5-runwith
 "If we want to migrate this test to JUnit 5, we need to replace the @RunWith annotation with the new @ExtendWith:"
 nao se esquecer: usar @ExtendWith(MockitoExtension.class) : essa anotacao te dah varias funcionalidade e, se nao me engano, eh ela que permite usar anotacoes como @Captor, @Mock, @InjectMocks etc
 
-Anotacao @Parametrizedtests
+Anotacao  @ParameterizedTest
 
 Entendi a diferenca entre Test Unitario Solitario et Social  (o social permite non-stubs, se limitando a dizer que o teste eh unitario se cada metodo de teste eh independente do outro)
+Escola de Boston vs Escola...
 
 -------------------------------------------------------
 @ConfigurationProperties em uma bean (e nao na classe):
