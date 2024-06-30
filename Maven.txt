@@ -143,6 +143,14 @@ Gets:https://stackoverflow.com/questions/574594/how-can-i-create-an-executable-j
 
 Obs: When doing a Run Java Application, Eclipse will check if the source code has changed first. If it did, then it will first compile and then run. If it hasn't, it will run without bothering to compile. The side effect of this, is that if you erase the .class file and do not change the source code, when trying to run the program, Eclipse will not be able to find the class.
 
+***************************************************
+
+A ideia de um projeto starter de spring-boot eh sinmples, mas eficiente: voce cria um projeto maven vazio, mas com varias dependencias no pom.xml
+Dessa forma, quando voce importa esse starter no seu proprio projeto, todas as outras referencias sao importadas tbem. O starter serve como um agregador
+de dependencias
+Exemplo: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test/3.3.1
+
+
 
 
 
