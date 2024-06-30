@@ -7,6 +7,7 @@ cherry pick
 como importar um arquivo texto normal para o eclipse
 Windows: software center
 Windows: services (para ver quais processos estao rodando, como rabbitmq por exemplo)
+Windows: Control Pannel -> Programms -> para ver ver onde o programa estah instalado (adicionar uma coluna opcional "Emplacement")
 x-correlation-id
 No Maven, se vc quiser fazer o download novamente de todas as dependencias, soh eh preciso trocar o path .m2\repository por outro nome, como .m2\repository-old 
 single active consumer (SAC) no rabbitmq
