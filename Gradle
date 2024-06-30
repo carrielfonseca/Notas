@@ -1,3 +1,8 @@
+
+ver tbem secao de Gradle no arquivo: Aprendizados_Desjardins.txt
+
+*************************************************************************************
+
 o que esse documento cobre:
 - conceito de task no gradle e alguns exemplos basicos como plugin, build.gradle (groovy e o build.gradle com kotlin)
 
