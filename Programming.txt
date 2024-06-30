@@ -366,12 +366,13 @@ Websites:
 
 - provides a security layer
 - wsdl2java tool to create the classes from the wsdl
-- how it works description: 
+- how it works description (mine):
 - the port as proxy to make calls to the service (see https://docs.oracle.com/javaee/5/tutorial/doc/bnayn.html). 
 - the url to call the service is in the location attribute of the address in the port.
-- the convention to specify a WSDL in a URL with ?wsdl in the end (SOAPUI uses this)
+- the convention to specify a WSDL in a URL with ?wsdl in the end (SOAPUI uses this). This document provides the contrat to call the SOAP API (methods, arguments etc)
 - example of using SOAPUI on youtube: https://www.youtube.com/watch?v=XolvQaeRglk
 - SEI (Service Endpoint Interface) and the @WebService, @WebMethod annotations
+- Ateh onde pude ver, as chamas http sao todas com metodo POST
 
 Some things to have in mind:
 - SOAP versions: https://stackoverflow.com/questions/736845/can-a-wsdl-indicate-the-soap-version-1-1-or-1-2-of-the-web-service
@@ -401,6 +402,8 @@ Some things to have in mind:
 - git branch             shows the branches, excluding the remote ones
 - git checkout --track origin/newsletter
 
+git rebase: estrategia que ajuda a manter os commits mais limpos, sem gerar um commit de "merge develop" por exemplo
+
 to create a remote repo you can do:
 - git remote add origin https://github.com/username/new_repo
 see: https://kbroman.org/github_tutorial/pages/init.html
@@ -411,6 +414,8 @@ see https://www.git-tower.com/learn/git/commands/git-push
 
 config git na maquina: local, global and system
 https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config#:~:text=On%20windows%20this%20file%20can,on%20Windows%20Vista%20and%20newer
+
+
 
 /*******************************************Svn*********************************************/
 branch master eh a trunk no svn
