@@ -56,7 +56,7 @@ src/main/resources
 src/test/java
 src/test/resources
 
-Maven is made of phases and goals, phases being made of many goals. Exanokes if of phasesL clean, compile, package, install and deploy
+Maven is made of phases and goals, phases being made of many goals. Examples of phases: clean, compile, package, install and deploy
 
 **********************************************common tags**************************
 You can also specify that you only want the dependency available for tests with the scope tag being "test":

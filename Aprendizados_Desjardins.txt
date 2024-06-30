@@ -254,6 +254,7 @@ em um projeto maven, right click e depois ver as opcoes de maven (para fazer o u
 em um projeto gradle: nao esquecer de fazer "Reload All Gradle Projects" na tab do gradle
 
 Para configurar remote repos: Git -> Manage Remotes
+Para ver quem fez os commits: "Annotate with Git Blame"
 
 -------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------gradle----------------------------------------------------------------------------

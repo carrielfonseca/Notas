@@ -146,6 +146,17 @@ https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-trad
 
 You can specify the java version in maven with spring boot with the property java.version: https://www.baeldung.com/maven-java-version
 
+@AutoConfigureMockMvc and @AutoConfigureWebTestClient: usefull for testing the controller
+SpringBoot tests
+"By default, @SpringBootTest does not start the server but instead sets up a mock environment for testing web endpoints.
+With Spring MVC, we can query our web endpoints using MockMvc or WebTestClient, as shown in the following example:"
+https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html#testing.spring-boot-applications.with-mock-environment
+
+"One of the major advantages of dependency injection is that it should make your code easier to unit test. You can instantiate objects by using the new operator without even involving Spring. You can also use mock objects instead of real dependencies.
+Often, you need to move beyond unit testing and start integration testing (with a Spring ApplicationContext)."
+https://docs.spring.io/spring-boot/reference/testing/spring-applications.html
+
+
 *********************************************Ldap Spring***************************************************
 
 
@@ -172,7 +183,7 @@ Note: don't think the Dn is actually persisted.
 
 ************************************************ Java, Eclipse, Maven and General ***************************************************************************
 
-***
+******
 Java: PATH: where you can actually find the command line commands (From what I understand, when you do a javac command for instance, 
             this needs to be a System Variable in the Operating System to be recognized. it will use the .exe files to be able to run).
             Moreover, on windows, the PATH variables will point to the jdk folder/bin (where the .exe files are)
@@ -180,8 +191,23 @@ Java: PATH: where you can actually find the command line commands (From what I u
             Error you get if the environment variable is not set in your operating system: 'javac' is not recognized as an internal or external command, operable program or batch file.
       CLASSPATH: see github project about this
       (https://github.com/carrielfonseca/Java_Tool_Box_And_Challenges/blob/master/src/toolbox/TextFileReadFromClassPath.java).
- 
-Command line:     
+      PROGRAM ARGUMENTS: argumentos recebidos pelo String[] args na main class. No command line, eh fornecido no comando java mainclass [args]
+      ENVIRONMENT VARIABLES: propriedades de environment: podemos fazer o setting no IDE, no computador etc
+      No codigo, podemos acessar ou fazer o setting com: System.getEnv()
+---
+google: environment variables in java programmatically
+Artigo interessante sobre --add-opens option na JVM (vi quando rodamos snowflake)
+https://www.baeldung.com/java-set-environment-variable-runtime
+google: Java Property variable
+
+Artigo interessante Property vs Environment variables
+https://www.baeldung.com/java-system-get-property-vs-system-getenv
+"To update System Properties at runtime, we use the System.setProperty method"
+"We can update Properties at runtime, while Environment Variables are an immutable copy of the Operating System’s variables."
+
+---
+
+Command line:
   javac Fabio.java: command line to compile
   java Fabio: commandline to run the Fabio.class file
   java -jar <name-of-jar-with-extension>	 (when there is a MANIFEST file)
@@ -192,7 +218,7 @@ Command line:
   https://www.programmergate.com/run-jar-file-command-line/
   https://stackoverflow.com/questions/26551718/how-to-execute-jar-file-with-a-external-dependency-using-command-line-on-windows
 
-***
+*******
 
 Eclipse: - Working Sets->Projects->Packages is the hierarchy structure in java when you see it in the eclipse menu
          - right-click the project -> properties to see the project path
