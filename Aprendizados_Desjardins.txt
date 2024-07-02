@@ -236,14 +236,14 @@ Settings | Version Control | Commit, then enable Use non-modal commit interface
 
 
 File -> Settings seems more like the Windows Preferences you have on Eclipse
-File -> Project Structure (para escolher o jdk e outras opcoes especificas do projeto)
+File -> Project Structure (para escolher o jdk e outras opcoes especificas do projeto - especifico ao projeto em si, nao tanto a config global do Intellij)
 File -> New Project from Version Control  (para importar um repositorio no github)
 A tab git fica embaixo a esquerda e a branch sendo usada eh embaixo a direita
 a brach git 
 Tab Git on the left (Roll Back)
 Aziza me ensinou: como mudar o terminal do Intellij: File -> Setting -> Terminal e depois colocar: Shell Path = C:\Users\DXI9816\AppData\Local\Programs\Git\bin\bash.exe
-ctrl + shift +F	search for a word	
-ctrl + shift +N	search for a file	
+ctrl + shift + F	search for a word
+ctrl + shift + N	search for a file
 Alt+Right and Alt+Left to change tabs		
 ctrl+alt+f8 	inspeciona o elemento	https://stackoverflow.com/questions/18073545/eclipse-inspection-ctrl-shift-i-equivalent-in-intellij-idea-community-edi
 Navigate Method Hierarchy (ctrl + shift + H)		
@@ -254,7 +254,7 @@ Ctrl+alt+L	Format code
 em um projeto maven, right click e depois ver as opcoes de maven (para fazer o update dependencies que eu faco no eclipse)
 em um projeto gradle: nao esquecer de fazer "Reload All Gradle Projects" na tab do gradle
 
-Para configurar remote repos: Git -> Manage Remotes
+Para configurar remote repos (mudar a url de origem do projeto): Git -> Manage Remotes
 Para ver quem fez os commits: "Annotate with Git Blame"
 
 Quando voce cria um arquivo .sh no Intellij ele disponibiliza um botao play para rodar

@@ -461,7 +461,7 @@ Mule: specify a Rest api contract (validation) etc
       e gerencia os erros)
       data composition
       data validation
-      data composition      
+      data composition
 
       good modules: aggregator, objectstore (what else?), vm, idempotent, scater gatther, webservices with soap.
 
