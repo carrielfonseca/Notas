@@ -1,4 +1,4 @@
-This file is mostly a summary from the the Docler course in the pen drive
+This file is mostly a summary from the the Docker course in the pen drive from Facilite
 
 Docker ID: carrielfonseca / A*****
 Docker enterprise: can run docker natively (windows home edition does not have that)
@@ -212,6 +212,18 @@ Cannot have two containers access the same volume at the same time (is this a be
 Most database systems dont do major upgrades automatically. Usually it requires a tool to do this upgrade
 docker container run -d  -v fabio-postgres:/var/lib/postgresql/data postgres:9.6.1
 docker container run -d  -v fabio-postgres:/var/lib/postgresql/data postgres:9.6.2
+
+
+***********************Other interesting sources***************
+
+TravisMedia: Do NOT Learn Kubernetes Without Knowing These Concepts...
+https://www.youtube.com/watch?v=wXuSqFJVNQA
+
+TravisMedia: Learn Docker in an hour
+https://www.youtube.com/watch?v=i7ABlHngi1Q
+
+
+
 
 
 
