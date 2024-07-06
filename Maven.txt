@@ -151,6 +151,22 @@ de dependencias
 Exemplo: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test/3.3.1
 
 
+******************Scopes e comparacao com gradle******************
+
+google: compileonly dependencies gradle
+https://blog.gradle.org/introducing-compile-only-dependencies
+" For Java developers familiar with Maven, compile-only dependencies function similarly to Maven’s provided scope,
+ allowing you to declare non-transitive dependencies used only at compilation time"
+
+google: scope provided in gradle
+https://reflectoring.io/maven-scopes-gradle-configurations/
+"An example use case for this configuration is an annotation processor like Lombok, which modifies
+the bytecode at compile time. After compilation it’s not needed anymore, so the dependency is not available at runtime."
+Pessoalmente, acho que o metodo contract first do open API tbem eh uma forma de compileOnly: o contrato gera o codigo,
+e depois nao eh mai necessario
+
+
+
 
 
 
