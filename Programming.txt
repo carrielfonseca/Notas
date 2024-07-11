@@ -385,6 +385,14 @@ Some things to have in mind:
   There Laurent found the jewel: the SoapPreProtocolOutInterceptor. I used this specifically to intercept the action that was 
   being called by the SEI in the Ultipro class. Think you can also use the SoapActionInInterceptor.java interceptor
 
+********************************Java Mockito and Unit tests****************************
+
+google:how does mockito check for equality when argument.matcher eq is used?
+https://www.toptal.com/java/a-guide-to-everyday-mockito
+"Mockito requires you to provide all arguments either by matchers or by exact values.
+So if a method has more than one argument and you want to use argument matchers for only some of its arguments,
+it can’t be done. You can’t write code like this:"
+
 
 
 /*******************************************Git*********************************************/
