@@ -1,0 +1,112 @@
+
+
+*********Algumas classes classicas*********
+
+Controller
+Service
+Config
+Dao
+Dto
+Properties
+Entity
+Repository
+Mapper
+Factory
+Builder
+Consumer
+Producer
+Client
+Parser
+Strategy
+
+Gostei tbem do curso Plural Sight sobre clean code: primitive obsession.
+Por exemplo, podemos u objeto HttpRequest para fazer um wrapper de todos os parametros necessarios (ou SqlParams etc)
+
+
+********************Utils e Helper***************
+
+Utils: apenas static methods com private constructor
+
+https://www.baeldung.com/java-helper-vs-utility-classes
+
+****************Builder e Factory***************
+
+Factory: Vi duas possibilidades para criar uma factory: uma eh ter uma classe com um metodo que cria instancias diferentes de uma interface dependendo do input
+A outra eh ter varios metodos para criar instancias bem precisas (exemplo: createFilePrinter(), createConsolePrinter() etc). Ver tbem artigo de Medium sobre esse design pattern
+
+google: factory and builder pattern: 
+https://refactoring.guru/design-patterns/factory-method
+
+Builder: objeto complexo. Evita um constructor gigante
+A dinamica do builder eh normalmente um objeto do tipo que se quer construir dentro da classe com varios metodos retornando o Builder mesmo e no final um metodo .build() que retorna
+o objeto desejado. Exemplo: PersonBuilder
+
+Em Java, a biblioteca lombok tem uma anotacao @Builder que ja dah toda a dinamica do Builder para voce
+
+https://www.baeldung.com/lombok-builder 
+
+https://refactoring.guru/design-patterns/builder
+
+---
+
+Usando a bilioteca Snowpark Java, fizemos algo interessante:
+
+public static DataFrameBuilder toBuilder(DataFrame dataFrame) {
+        return new DataFrameBuilder(dataFrame.clone());
+    }
+	
+Onde o constructor era: 
+private DataFrameBuilder(DataFrame dataFrame) { this.dataFrame = dataFrame;   }	
+
+Pergunta: podemos ter um constructor publico em um builder?
+
+
+****************Gaucho***************
+
+Video do gaucho (Filipe Deschamps) mostrando como reduzir a quantidade de ifs:
+https://www.youtube.com/watch?v=Lf3ZV0UsnEo&t=503s
+
+
+
+****************Medium Article (Spring Boot Design Patterns)***************
+
+https://jackynote.medium.com/top-5-design-patterns-in-java-spring-boot-best-practices-and-examples-002c45d3d331
+
+Alguns excelentes exemplos de design patterns: Singleton, Decorator, Strategy, Factory
+
+
+******Constructor chaining*******
+
+Vi no curso de boas praticas do plural sight: simples mas eficiente: assim posso definir os valores default
+
+*********************links interessantes***********************
+
+Mosh: Design Patterns
+https://youtu.be/NU_1StN5Tkk?si=py788CAjdksgyS8- 
+Mencao da dependency injection na parte de interface
+
+
+google: design pattern to process a csv file
+Boa resposta. Pesquisei isso quando estava no projeto de processor um csv no projeto Beneva de finance (Vitech)
+https://softwareengineering.stackexchange.com/questions/351496/design-pattern-for-processing-a-huge-csv-file-java#351499 
+
+you tube search: design patterns
+
+8 Design Patterns EVERY Developer Should Know
+
+https://www.youtube.com/watch?v=tAuRQs_d9F8
+
+10 Design Patterns Explained in 10 Minutes
+https://www.youtube.com/watch?v=tv-_1er1mWI
+
+
+*******************************************
+
+a ideia do GCC mapper selector: tinhamos varios mappers xml por exmplo.
+Entao voce faz: uma classe com do tipo MapperSelector em que ha um campo com TODAS as implementacoes de mappers: List<Mappers> mappers.
+E cada Mapper tem um campo templasteId por exemplo. O MapperSelector vai ter: um metodo select(String templateId) que vai retornar o Mapper segundo esse Id
+
+
+
+
+

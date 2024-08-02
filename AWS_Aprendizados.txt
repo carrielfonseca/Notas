@@ -1,0 +1,140 @@
+*****************Configuracao**********************
+
+A conta AWS eh muito parecida com qualquer conta de usuario normal, mas ao inves de username / password, temos um par access_key / secret_access_key
+No windows, as env variables usadas sao: AWS_ACCESS_KEY_ID e AWS_SECRET_ACCESS_KEY (posso ver um par desses na minha conta AWS pelo site)
+
+Ferramenta UI utilizada por mim na Beneva para ver as resources AWS (muito ligado ao Kubernetes): k9s
+Para instalar o k9, usei uma ferramenta chamada Chocolatey: instalo Chocolatey aqui:  https://chocolatey.org/install
+e depois instalar usa chocolatey para instalar o k9 por aqui: https://k9scli.io/topics/install/
+
+Pela Beneva, tinhamos um arquivo de configuracao kubernetes em /username/.kube/config
+Esse arquivo mostrava os clusters do kubernetes, com seus contextos (no caso, um contexto era uma conta AWS diferente (lab, dev e prod))
+para poder ver o contexto pelo k9s, era preciso configurar esse arquivo para incluir o contexto desejado
+
+navegacao pelo k9s das resources kubernetes:
+contexto: a conta AWS em si (lab, dev e prod)
+namespace: as resources eram alocadas em diferentes namespaces (dev, sit, uat etc)
+
+Link de comandos k9s: https://k9scli.io/topics/commands/
+mais famosos: :ctx et :ns  
+ver tbem: https://k9scli.io/
+
+Tbem ha um arquivo de configuracao aws em username/.aws/config
+Na Beneva, esse aquivo eh essencialmente um arquivo com infomacao do sso, mas acho que numa configuracao mais basica, eh onde se guarda o access_key e o secret_access_key
+
+Kubernetes command line tool: kubectl
+ver: https://kubernetes.io/docs/reference/kubectl/quick-reference/
+
+
+
+**********************Resources e servicos mais usados AWS e Kubernetes********************
+
+Servicos AWS:
+
+S3Bucket: Simple Storage Service: para guardar arquivos (um Windows Explorer na nuvem por assim dizer)
+SQS: Simple Queue Service (para comunicacao de mensagens)
+ECR: Elastic Container Registry: para guardar containers na AWS (um repositorio de containers)
+EKS: Elastic Kubernetes Service: para rodar pods Kubernetes como: (deployment, cronjobs etc)
+Iam: Identity Access Management. Eh um servico para dar acessos a contas e roles
+
+Objetos Kubernetes:
+
+pods: menor objeto Kubernetes. Um pod pode ter um ou mais containers
+deployment: uma aplicacao que roda 
+hpa: horizontal pod scaler. (instancia outros pods/deployments dependendo da configuracao feita)
+configmap: tipo de objeto com a configuracao do pod. Referenciado num cronjob ou um deployment
+
+
+
+**************************Conceitos importantes********************************
+
+Ver tbem a parte AWS no arquivo de Aprendizados da Beneva
+
+tags nas resources: podemos colocar tags nas resources da AWS e depois referenciar todas as resources que tem determinada tags
+Na Beneva, colocamos os centro de custo por exemplo numa imagem no ECR, mas tbem num servico s3Bucket etc
+
+ARN: Amazon Resource Name. Nome que identifica unicamente uma resource (s3 bucket, SQS etc) na Amazon. Para ver o formato de uma ARN, ver links abaixo
+
+o que eh um pod (como se faz o deployment): menor unidade de Kubernetes. Um pod pode ter um ou mais containers
+Ver: https://pauldally.medium.com/deployments-dont-create-pods-b6684f8fb86f#:~:text=Specifically%2C%20a%20Deployment%20does%20not,s%2C%20and%20ReplicaSets%20create%20Pods. 
+"Specifically, a Deployment does not create Pods.
+That may sound ludicrous, especially if you have successfully applied a Deployment and seen Pods get created in the past. Nonetheless, a Deployment does not (directly) create Pods. 
+Instead, a Deployment creates ReplicaSets, and ReplicaSets create Pods."
+
+---
+actions and policies explicados (policies, actions et AWS resources)
+
+google: AWS policy
+https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html
+google: AWS ARN
+https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+"To look up the ARN format for a specific AWS resource, open the Service Authorization Reference, open the page for the service, and navigate to the resource types table."
+Posso entao ver a pagina abaixo, que me oferece 
+https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazons3.html
+
+You Tube: AWS IAM (VIDEO MUITO BOM)
+https://www.youtube.com/results?search_query=AWS+IAM
+Conceitos importantes: resources, actions and policies. Ver tbem na pagina https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazons3.html por exemplo uma lista de Actions nessa resource
+
+---
+Roles na AWS
+Uma ideia que aparece frequentemente como arquitetura (tbem em Snowflake). Voce dah acesso a um role especificico (uma policy com certas acoes que podem ser feitas por exemplo), 
+e depois dah esse role para um usuario. Esse usuario usa entao esse role para se conectar e acessar essa resource
+
+
+"A user in one account can switch to a role in the same or a different account. While using the role, the user can perform only the actions and access only the resources permitted by the role; their original user permissions are suspended. When the user exits the role, the original user permissions are restored."
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_aws-accounts.html#:~:text=A%20user%20in,permissions%20are%20restored. 
+
+No snowflake, temos os privilegios (create table, create sequence etc) que seriam o equivalente as acoes da AWS. Esses privilegios (grants no jargao), sao designados a um role e depois esse role eh designado a um usuario
+
+google: AWS roles (toda uma documentacao)
+
+----
+comunicacao entre pods em Kubernetes
+Chat GPT (fev 2024): "In kubernetes, what is this?
+finance.namespace.svc.cluster.local"
+
+https://chatgpt.com/share/58bc3f54-5bdf-424b-9975-10cbcbb0c20b
+
+Basicamente eh um host que o Kubernetes designa ao servico. Segundo o link, servicos no mesmo namespace normalmente nao precisam de autentificacao
+
+
+
+**********************Links interessantes (Travis Media)********************
+
+Travis media: Kubernetes Explained in 15 Minutes
+Explica a ideia basica de Kuberntes: objeto deployment faz referencia a uma imagem
+https://www.youtube.com/watch?v=r2zuL9MW6wc&t=591s
+Na Beneva, por exemplo, a imagem estava no ECR: image: default-cluster-registry.beneva.ca/ca/beneva/gi/is/finance/liquibase:1.0.0
+
+Tbem ver meu you tube como meus favoritos
+Canal muito bom sobre AWS: Be a Better Dev https://www.youtube.com/@BeABetterDev/videos
+
+outro que gostei como complemento:https://www.youtube.com/@TechwithLucy/videos
+
+
+**********************Minikube (link do Kubernetes) ********************
+
+
+**********************Helm e Flux ********************
+
+Helmchart, HelmRelease: os dois objetos mais importantes. Pode-se ve-los no k9s como uma resource AWS
+
+Na Beneva usava-se essas ferramentas (Helm e flux) para orquestrar os deployments.
+Mantinha-se uma projeto chamado flux-{namespace} com as versoes das releases.
+Um HelmChart era publicado no Nexus ou na AWS ECR com uma determinada versao e no flux tinhamos um objeto HelmRelease onde informavamos a versao do chart a ser publicada
+ver: https://fluxcd.io/flux/components/helm/helmreleases/
+propriedades: spec.chart.spec.version, sourceRef etc
+
+Nos projetos Java tinhamos uma estrutura de pastas:
+chart: values.yaml e Chart.yaml
+chart/config: algumas poucas coisas como arquivos liquibase, application.yaml, logback-spring.xml
+chart/templates: onde ficavam a maoria dos arquivos (deployements, vault, serviceaccount, virtualservices, o chart em si mesmo)
+
+ver:
+https://helm.sh/docs/topics/charts/
+https://helm.sh/docs/chart_template_guide/builtin_objects/
+
+************Terraform**************
+
+ver videos no you tube salvos nos favoritos
