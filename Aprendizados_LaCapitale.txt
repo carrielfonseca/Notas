@@ -1,0 +1,288 @@
+
+
+1-) String to byte and vice versa
+byte[] byteOfString = "hello".getBytes();
+String s = new String(byteOfString);
+
+2-) File to inputstream
+
+import java.net.URL;
+import java.io.FileInputStream;
+
+URL url = getClass().getClassLoader().getResource("data/fatca.pdf");
+FileInputStream inputStream = new FileInputStream(url.getPath());
+
+3-) inputStream to String: note you can do this only one. The input stream is flushed afterwards
+
+import org.apache.commons.io.IOUtils;
+import java.nio.charset.StandardCharsets;
+
+IOUtils.toString(inputStream, StandardCharsets.UTF_8.name())
+
+4-) inputstream to bytearray
+import com.google.common.io.ByteStreams;
+
+byte[] byteOfString = ByteStreams.toByteArray(inputStream)
+
+---
+questao do cacerts novamente apareceu:colocar um novo arquivo cacerts em jdk-15.0.2.7-hotspot\lib\security para ter os certificados necessarios
+---
+endpoint: actuator/health
+---
+Como rodar a mesma aplicacao em diferentes portas no Spring Tool Suite: soh mudar a environment variable server.port configuracao de environment variables
+---
+War considerations:
+war package normalmente nao precisa de um main method: 
+
+https://stackoverflow.com/questions/29782148/why-do-i-need-main-method-if-i-develop-web-app-as-war-using-spring-boot
+
+"Main method is not required for the typical deployment scenario of building a war and placing it in webapps folder of Tomcat"
+"However, if you want to be able to launch the app from within an IDE (e.g. with Eclipse's Run As -> Java Application) while developing 
+or build an executable jar or a war that can run standalone with Spring Boot's embedded tomcat"
+
+https://www.baeldung.com/java-jar-war-packaging
+"we can run a JAR from the command line if we build it as an executable JAR without using additional software. Or, we can use it as a library. In contrast, we need a server to execute a WAR."
+
+see also:
+https://www.baeldung.com/tomcat-deploy-war
+---
+quando faco no Eclipse  Run as -> maven clean maven build por exemplo, consigo ver no console a versao do jdk que foi usada
+---
+no eclipse, se eu fizer Run as -> Click Right no Maven Build, posso criar um maven build personalizado, por exemplo com goals: clean install
+---
+Servidor Netty nao estah em servlet
+---
+Para pegar informacao na Request num projeto de Spring (por exemple pegar o valor de um Header que foi enviado), eh soh colocar 
+metodo do Controller o objeto HTTPServlet
+
+Exemplo:
+@PostMapping
+public ResponseEntity<SalesResponse> submitTransaction(@RequestBody SalesTransaction salesTransaction,	HttpServletRequest request) {
+  authHeader = request.getHeader("Authorization");
+}
+---
+arquivo settings.xml do maven tem dois tipos: https://howtodoinjava.com/maven/maven-settings-file/
+
+"Maven can have two settings files working at a time"
+"Both files are optional. If both files are present, the values in the user home settings file overrides the values from global settings file."
+
+Eu geralmente uso C:\Users\myusername\.m2
+
+No eclipse, dah para mudar em Preferences-> Maven -> User Settings esse arquivo (e tbem onde os arquivos de dependencia sao colocados no repository)
+---
+Otimo video do Camel: https://www.youtube.com/watch?v=eh9C0GyxtHE
+pegar tbem o projeto do github dele
+Basicamente, o listener do Camel eh a propria route
+---
+String formats: https://dzone.com/articles/java-string-format-examples
+---
+Tests no spring: https://mkyong.com/spring-boot/spring-boot-how-to-init-a-bean-for-testing/ 
+Diferenca entre @RunWith(MockitoJUnitRunner.class) e @RunWith(SpringRunner.class) @SpringBootTest
+o segundo realmente injeta as verdadeiras beans
+---
+logs with spring
+Aprendi log levels: https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/reference/html/boot-features-logging.html
+(soh mudar no application properties para algo como logging.level.org.springframework.web=DEBUG
+
+Google: does the logger name need to be the package name in logback
+https://stackoverflow.com/questions/36882355/java-logback-custom-logger-name
+
+como fazer logs de email: 
+
+<appender name="smtpAppender" class="ch.qos.logback.classic.net.SMTPAppender">
+		<smtpHost>${host}</smtpHost>
+		<smtpPort>${port}</smtpPort>
+		<to>${to}</to>
+		<from>${from}</from>
+		<subject>${subject}</subject>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>${pattern}</pattern>
+		</layout>
+		<cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
+			<bufferSize>1</bufferSize>
+		</cyclicBufferTracker>
+</appender>
+
+---
+actuator healthe check: actuator/health
+---
+
+---
+
+Aprendi a usar json schemas que depois serao utilizados para gerar classes autogeradas (usar tbem o Goal generate-sources do maven )
+
+<plugins>
+			<plugin>
+				<groupId>org.jsonschema2pojo</groupId>
+				<artifactId>jsonschema2pojo-maven-plugin</artifactId>
+				<version>${jsonschema2pojo-maven-plugin.version}</version>
+				<configuration>
+					<sourceDirectory>${basedir}/src/main/resources/schema/json</sourceDirectory>
+					<targetPackage>com.lacapitale.caap.individuel.insurance.model</targetPackage>
+					<generateBuilders>true</generateBuilders>
+					<serializable>true</serializable>
+					<initializeCollections>true</initializeCollections>
+					<includeJsr303Annotations>true</includeJsr303Annotations>
+					<includeHashcodeAndEquals>true</includeHashcodeAndEquals>
+					<removeOldOutput>true</removeOldOutput>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+</plugins>
+---
+Aprendi a usar xml schemas
+
+Google: java generate class from xsd
+https://stackoverflow.com/questions/686453/generate-java-classes-from-xsd-files
+
+Google: jaxb java
+https://www.baeldung.com/jaxb
+
+<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>xjc</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${build.directory}/generated-sources/jaxb-dto</outputDirectory>
+							<packageName>com.lacapitale.caap.individuel.insurance.dto</packageName>
+							<sources>
+								<source>${basedir}/src/main/resources/schema/xsd</source>
+							</sources>
+							<verbose>true</verbose>
+							<noGeneratedHeaderComments>true</noGeneratedHeaderComments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>xjc-validation</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${build.directory}/generated-sources/jaxb-validation</outputDirectory>
+							<packageName>com.lacapitale.caap.individuel.insurance.dto.validation</packageName>
+							<sources>
+								<source>${basedir}/src/main/resources/schema/validation</source>
+							</sources>
+							<verbose>true</verbose>
+							<noGeneratedHeaderComments>true</noGeneratedHeaderComments>
+						</configuration>
+					</execution>
+				</executions>
+
+</plugin>
+
+------
+Como mudar minhas credenciais no no github no spring tool suite (eclipse): parece que eh unico
+apenas va na perspectiva de Git, depois Remotes->origin->right-click->Configure Push->Change
+aih eh soh de fato mudar o password
+---
+Encode e decode base64: aprendi a prestar atencao na opcao do site que eu uso para fazer o encoding se eh linux ou windows o enconding (CRLF vs LF)
+---
+diferentes usuarios no mesmo host de um ftp podem ter pastas diferentes. Alem disso, tambem aprendi a usar um privateKeyPassphrase na configuracao do sftp.
+basicamente, eh o password do certificado (privateKey). Esse certificado tbem eh identificado como privateKey pelo Spring Integration quando se faz a configuracao.
+Aprendi a usar como encoded na Base64 para estocar se for necessario (ao inves de colocar diretamente um arquivo de certificado no main/resources
+---
+String format:
+
+String s = String.format("Dog validation error: %s and %s and ", new Dog(), new Dog());
+---------
+entendi por que lombok precisa mudar a configuracao do Eclipse
+https://www.baeldung.com/lombok-ide
+--------- 
+vi novamente a biblioteca cxf para Soap. Expoe os endpoints numa interface com a anotacao @WebService	, nao necessariamente na implementacao
+--------
+Conexao Ftp (e Sftp tbem): usar Spring Integration
+ver https://docs.spring.io/spring-integration/reference/html/ftp.html
+
+O pulo do gato eh colocar no Header da mensagem "file_name"
+"By default, if no file name generator is specified, Spring Integration uses o.s.i.file.DefaultFileNameGenerator. 
+DefaultFileNameGenerator determines the file name based on the value of the file_name header (if it exists) in the MessageHeaders, or, 
+if the payload of the Message is already a java.io.File, it uses the original name of that file."
+
+import org.springframework.integration.support.MessageBuilder;
+
+Map<String, Object> headers = new HashMap<>();
+headers.put("file_name", filename);
+Message<InputStream> message = MessageBuilder.withPayload(inputStream).copyHeaders(headers).build();
+
+alem disso, na configuracao, voce pode colocar a propriedade:
+@Bean
+Properties configProperties() {
+  Properties config = new Properties();
+  config.setProperty("StrictHostKeyChecking", "no");
+  config.setProperty("PreferredAuthentications","publickey");
+  return config;
+}
+----------------------
+google: activemq failover
+you get: https://activemq.apache.org/configuring-transports (ver fail over e tcp protocol)
+--------------------
+como fazer Unit Test no Spring. Se voce quer injetar Bean no unit test, sem fazer Mocks, fazer:
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class SomeClassTest
+
+ver https://mkyong.com/spring-boot/spring-boot-how-to-init-a-bean-for-testing/
+
+No projeto, usavamos @RunWith(MockitoJUnitRunner.Silent.class) ou @RunWith(MockitoJUnitRunner.class), o que acaba nao injetando as beans
+------
+Posso mudar o jar on the go sem problema: mudar umna propriedade, por exemplo, e depois rodar no command line
+-----
+Posso rodar o maven no command line com profile tbem (-P)
+ver: https://maven.apache.org/guides/introduction/introduction-to-profiles.html
+
+Exemplo:
+<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources/dev</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+</profiles>		
+------
+No Spring, se eu coloco uma String no construtor sem o @Value("${modulus.studio.api.tee.validation.file}") String teeFileName, 
+o framework espera haver uma bean com esse nome (parece nao ser possivel fazer colocar um String diretamente em um construtor bypassando o framework
+------
+Fazendo queries com spring Jpa: usa a anotacao @Param
+ver: https://www.baeldung.com/spring-data-jpa-query
+-----
+interessante para entender uma questao de dependencia transitiva no Maven:
+Digamos que voce tem um projeto A com dependencias do projeto B e C. Esse projeto chama um metodo que estah no projeto B que retorna um objeto do projeto C.
+Agora, o projeto B, naturalmente tbem eh dependente de C. Dessa forma, a versao de C que estarah no projeto A serah a que estah especificada no pom do A, ja que esta tem maior 
+precedencia. Digamos entao que o o projeto B chame um metodo de C que estah apenas na nova versao de C.
+Ocorrera entao um erro que serah detectado apenas em run time: java.lang.NoSuchMethodError
+
+Por exemplo,o projeto B manipula o objeto User do projeto C onde user.setName soh existe numa versao nova
+
+public User createUser() {
+		User user = new User("Ana");
+		user.setName("Ana Lucia");
+		
+		return user;
+
+ver: https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html
+"Maven picks the "nearest definition""
+
+
+
+
