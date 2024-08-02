@@ -1,0 +1,104 @@
+
+Colocar a serie de 4 videos que tinha achado sobre pact
+
+-----------------------------------------------Links Importantes para iniciar (Quick start)---------------------------------------------
+---
+Tutorial de introducao
+https://docs.pactflow.io/docs/tutorials/
+google: pactflow tutorial
+Mini curso online com passo a passo de uma aplicacao consumer / provider
+
+---
+
+Videos de introducao youtube: serie de 4 videos explicando PactFlow. No segundo video tbem fala como um teste de async messages tbem pode ser testado
+https://docs.pactflow.io/
+"New to contract testing? Watch this introductory level video series on contract-testing to understand what it's all about."
+google: pactflow tutorial
+
+---
+
+Site Oficial PactFlow
+https://docs.pactflow.io/
+
+---
+
+Site Oficial Pact. Aqui comecei a ver que pactflow nao eh sinonimo de pact
+https://docs.pact.io/
+google: Pact Flow Java
+
+---
+
+Links que segui do github:
+Referencia de base:
+https://github.com/pactflow/example-consumer-java-junit
+https://github.com/pactflow/example-provider-springboot
+
+e para Kafka, que serve de exemplo de pact para mensagens async:
+https://github.com/pactflow/example-consumer-java-kafka
+https://github.com/pactflow/example-provider-java-kafka
+Ver: https://docs.pactflow.io/docs/examples/kafka/java/consumer
+---
+Video da moca muito bom explicando a filosofia pact:
+https://docs.pact.io/consumer#watch-a-video-writing-good-consumer-tests
+Main take aways:
+- restraint is important. You want to be as loose as you can be
+- 07:00 first it was lots of json with exact mathing. Today, not so much
+- 12:40 most of the time you just want to do a "like" expression in your pacts 
+- 13:00 only each like with minimum element one
+- 16:30 cannot the absence of a field
+- 26:15 is there anything that will break if a rule IS NOT TRUE?
+
+--------------------------------------------Explicacao Pessoal de Pact---------------------------------------------
+
+Um arquivo pact (o contrato) eh gerado via uma biblioteca e publicado pelo consumidor no broker (no caso o pact flow). 
+Esse arquivo tem as informacoes do consumidor e do provider. O pacto eh identificado com uma versaonormalmente usando o hash do git () no contexto Java, fazemos  
+System.setProperty("pact.provider.version",   System.getenv("GIT_COMMIT") == null ? "" : System.getenv("GIT_COMMIT"));
+A maneira que o broker identifica o pacto em si eh por um checksum do conteudo, uma black box que a pessoa que faz o desenvolvimento nao precisa saber
+Dessa, quando o provider roda seu codigo e seu testem, ele entao verifica no broker se ha algum pact em que ele eh o provider e verificar se ele respeita o contrato ou nao, enviando a resposta para o broker.
+Pelo CLI do pact, pode-se entao rodar um comando pact can-i-deploy para decidir se o deployment pode ser feito ou nao
+Importante ver que: nao eh apenas o consumidor que faz essa verificacao. O provider tambem. Por isso, a documentacao do pact sugere que esse tipo de coisa eh feito mais para areas que trabalham 
+muito proximas uma a outra
+
+
+
+--------------------------------------------Topicos importantes de links que achei: ver emails enviados entre 19 fev et 16 mar 2023 --------------------------------------------------
+
+
+https://docs.pact.io/getting_started/matching/gotchas#you-cannot-expect-a-field-to-not-be-present-in-a-response
+"You cannot expect a field to not be present in a response"
+---
+https://docs.pact.io/implementation_guides/jvm/provider/junit
+"Setting the test to not fail when no pacts are found"
+google: how to make pact not to fail if there are no pact files in the pact broker
+---
+
+https://docs.pact.io/faq 
+"By dynamically creating the pacts, you have the option to keep your expectations in fixture files, or to generate them from your domain 
+(the recommended approach, as it ensures your domain objects and their JSON representations in the pacts can never get out of sync)."
+
+
+
+
+completar (links enviados no comeco de 2023 pelo gmail):
+-pending pacts
+-optional Atributes
+-pactdsl body
+Pact Cli
+Links achados: absence of fields
+pending pacts (and why not a good idea)
+common pattern to mirror one branch to the other in consumer / provider
+configure to pass if there are no contracts found in pactflow
+Links: publish pacts seguem a ordem
+Link: tag is deprecated
+Selector for JVM: usar um metodo dedicado
+
+-----------------------------------------CI/CD do Pact------------------------------------------------------------
+Common pattern, best practices, link important
+
+https://docs.pact.io/pact_nirvana
+
+
+
+
+
+

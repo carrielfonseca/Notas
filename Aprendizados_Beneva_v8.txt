@@ -1,0 +1,963 @@
+-----------------------------------------------------------------------------------
+-----------------------------Arquitetura Geral dos projetos---------------------- 
+-----------------------------------------------------------------------------------
+
+Os projetos sao na AWS com uma arquiteura interessante:  um conta eh usada para os servicos AWS em geral como SQS, S3Bucket etc
+Esse servicos sao criados por um repositorio de infra (ex: finance-infra) com scripts de Terrafrom. Os modulos Terraform sao subidos 
+fazendo referencia a blueprints ja feitos pela empresa e com uma url do repositorio github desses blueprints
+Um outro repositorio github existe de tipo flux (ex: flux-finance). Esse repositorio guarda as variaveis de environment 
+para cada branch, alem de guardar a versao do chart desejado (propriedade spec.chart.spec.version). Mudando essa versao, o flux faz o deployment de acordo
+com isso, o que eh interessante, pois ha um listener desse repositorio flux-finance para pegar a versao informada pelo desenvolvedor. Nao eh 
+o pipeline Jenkins que tem algum estagio de "Deploy"
+Um outra conta AWS eh usada para rodar as aplicacoes pelo Kubernetes (ac-eks) de fato
+
+Dentro das aplicacoes: ha uma pasta chart com outras pastas chart/config (logback, application.yaml) e chart/templates (objetos Kuberntes, Istio
+e um arquivo values.yml com valores de propriedade para serem usados no template via {{ .Values.replica.count }} ou, se fosse informado no flux,
+fazendo: liquibase.defaultSchema: FLUX   por exemplo
+
+
+Vi tbem: conceito de DLQ (Dead Letter Queue): Quando o producer nao conseguia tratar a mensagem, encaminhava para uma Dead Letter Queue
+Esse conceito tambem existe na SQS, mas pelo blueprint criado pela empresam, a DLQ era criada automaticamente
+
+Tecnologias Devops usadas: Flux, Helm, AWS, Kuberntes, Terraform, Jenkins
+Documentei isso em um arquivo especifico separado
+
+
+
+
+-----------------------------------------------------------------------------------
+--------------------------Variados ------------------------------
+------------------------------------------------------------------------------------
+
+Aprendi o que eh um Exit Code de um programa quando rodo pact ou qualquer coisa em um pipeline: 0 or not zero?
+Desmistifiquei o que estava no Desjardins no pipeline de concourse: como concourse podia saber que o build nao tinha passado? Basicamente eh isso
+---
+questao de paralelismo no Spring: tomar cuidado com Singleton Beans: not thread safe
+https://www.baeldung.com/spring-singleton-concurrent-requests
+---
+Questao de Reflection no Spring: quando usamos field injection, eh isso que estah sendo feito
+https://stackoverflow.com/questions/39890849/what-exactly-is-field-injection-and-how-to-avoid-it
+----
+Novamente questao de cacerts (certificados) java: rodar:
+keytool -import -trustcacerts -alias zscaler -file C:\path\tp\certificate.der -keystore C:\DEV\jdk\jdk-17.0.2\lib\security\cacerts
+
+Para pegar o certificado:
+Pour cela, vas au site internet cible, clique sur le cadena / la connexion est securisee / certificat valide
+Exporter le certificat racine au format .der
+
+Vew links: https://stackoverflow.com/questions/6908948/java-sun-security-provider-certpath-suncertpathbuilderexception-unable-to-find
+
+
+Comandos: 
+lista o cacerts do jdk
+keytool -list -cacerts
+lista o cacerts de algum outro arquivo que nao o jdk do JAVA_HOME:
+keytool -list -keystore cacerts
+
+importa o certificado mdeCert.cer para o cacerts
+exemplo:
+keytool -import -trustcacerts -alias mdecert -file C:\temp\mdeCert.cer -keystore cacerts
+minha maquina:
+keytool -import -trustcacerts -alias zscaler -file C:\path\tp\certificate.der -keystore C:\DEV\jdk\jdk-17.0.2\lib\security\cacerts
+---
+Numa aplicacao JAVA, fazer:
+TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+Atencao: Isso normalmente nao eh levado em consideracao quando rodamos teste Spring (a main class nao eh chamada nos testes)
+O que fiz como solucao: simples, fiz uma bean de configuracao nos testes com @PostConstruct TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+---
+Relembrei mockito https://www.baeldung.com/java-spring-mockito-mock-mockbean
+---
+Usar Clock Java para fazer Time Travel na aplicacao Java de batch: boa solucao do Eric
+https://medium.com/@aleksanderkolata/time-travel-in-java-do-you-have-a-clock-3c9060059561
+---
+Interessante a estrutura do projeto que a Beneva usa: para testes que rodam o contexto Spring completo, usam uma pasta de teste "it" (integration test)
+Depois usam um maven plugin para adicionar essa pasta no classpath
+Nome do plugin: build-helper-maven-plugin
+---
+Um arquivo UTF-8: posso ver no notepad++ o encoding de um arquivo no bottom right
+---
+Classe FileParser diferente de FileMapper (Sarra me apontou isso quando estavamos lendo csv). O File parser basicamente eh um leitor do csv
+---
+Diferente do concourse, que faziamos o setting do pipeline pelo command line, no Jenkins ha um JenkinsFile no projeto que eh levado em consideracao para 
+fazer o setting do pipeline
+---
+async library: interessante: biblioteca se chama awaitility (used for tests). Publicam algo numa queue por exemplo e veem se depois de tantos segundos as condicoes do teste (assert) foram satifesitas) 
+---
+importante ter numeros na classe como numero de fatos para usar easyRandom ou Jfixture
+--- 
+Definindo propriedades como uma variavel definida no environment:
+client-id: ${SNOWFLAKE_CLIENT_ID}    e definir SNOWFLAKE_CLIENT_ID como uma environment variable (ou de sistema)
+com isso, podemos colocar SNOWFLAKE_CLIENT_ID como uma variavel definida no IDE ou definida no Jenkins file. Exemplo: env.SNOWFLAKE_CLIENT_ID = "12345".
+Assim, um comando maven mvn clean build tera essa variavel  acessivel e  mvn -DSNOWFLAKE_CLIENT_ID = "12345". clean build nao sera necessario
+---
+Se for fazer uma biblioteca Spring, o usuario dessa biblioteca pode colocar @ComponentScan(basePackages = {"fonseca.fabio.contract.mapper"}) para pegar as beans dessa biblioteca
+---
+Se for fazer um teste de integracao com o contexto spring em que uma BD existe, pode fazer um Mock do objeto DataSource no contexto do teste:
+@MockBean(name = "snowflakeConnectionPoolDataSource")
+private DataSource snowflakeConnectionDataSource;
+---
+em unit tests de Java: quando um objeto que sera mocked tem que retornar outro objeto mock, tem que fazer um mock de mock no Mockito (vi tbem pelo ChatGPT)
+when objectMocked.getAnotherObject.thenReturn(anotherMockedObect)
+---
+Descobri que Jenkins tem environment variables out of the box para ser usadas (projeto Pact)
+https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Complete-Jenkins-Git-environment-variables-list-for-batch-jobs-and-shell-script-builds
+"Anyone automating their Jenkins pipelines through batch jobs or shell scripts knows the value of referencing entries on the Jenkins environment variables list. 
+But not everyone realizes that once you start using the Jenkins Git integration plugin, a vast array of of new Jenkins Git environment variables become available to your builds".
+Descobri pelo projeto piloto PACT fazendo:
+  @BeforeAll
+  static void setPactVariables() {
+    System.setProperty("pact.provider.version",
+            System.getenv("GIT_COMMIT") == null ? "" : System.getenv("GIT_COMMIT"));
+Repare que GIT_COMMIT pode ser usado como um identificador unico do pact. Ver exemplo:
+AQUI O EXEMPLO KAFKA DO PACTFLOW
+---
+Pelo projeto de pact, descobri a sigla para testes: AAA: Arrange, Act, Assert
+---
+Pelo projeto de pact, descobri o expand and contract pattern:
+"If you need to make a breaking change to a provider, you can do it in a multiple step process using the expand and contract pattern."
+https://docs.pact.io/faq#:~:text=If%20you%20need%20to%20make%20a%20breaking%20change%20to%20a%20provider%2C%20you%20can%20do%20it%20in%20a%20multiple%20step%20process%20using%20the%20expand%20and%20contract%20pattern. 
+---
+AQUI OS LINKS BAELDUNG DAS TEST PROPERTY SOURCES
+----
+MOCKMVC E CONFIGURACAO BASICA
+---
+MIGRACAO SPRING 3: 
+
+
+------------
+mock static in Java with mockito
+https://www.baeldung.com/mockito-mock-static-methods
+--------
+TestConfiguration com Spring
+
+
+
+
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+
+
+Documentacao de alguns links:
+
+1-) Spring Boot 
+2-) Spring Batch
+3-) Spring data?
+4-) Snowflake
+5-) Liquibase
+6-) AWS
+7-) Terraform
+8-) Kubernetes
+9-) AWS
+
+
+---------------------------AWS------------------------
+
+Acesso a AWS eh feito por access-key/access-secret (algo como username / password)
+
+ARN: Amazon Resource Name. Nome que identifica unicamente uma resource (s3 bucket, SQS etc) na Amazon. Para ver o formato de uma ARN, ver links abaixo
+IAM: Identity Access Management
+
+google: AWS policy
+https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html
+google: AWS ARN
+https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+"To look up the ARN format for a specific AWS resource, open the Service Authorization Reference, open the page for the service, and navigate to the resource types table."
+Posso entao ver a pagina abaixo, que me oferece 
+https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazons3.html
+
+You Tube: AWS IAM (VIDEO MUITO BOM)
+https://www.youtube.com/results?search_query=AWS+IAM
+Conceitos importantes: resources, actions and policies. Ver tbem na pagina https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazons3.html por exemplo uma lista de Actions nessa resource
+
+VER TAMBEM: Arquivo dedicado a Devops (AWS, Kubernetes, Flux, Helm etc)
+
+
+
+-------------------voltando a questao do classpath (inclui bibliotecas)-----------------------------
+ChatGPT: in a maven project, are files inside a dependency  included in the classpath?
+"Yes, files inside a dependency are included in the classpath of a Maven project.
+When you add a dependency to your Maven project, Maven downloads the required JAR files (and their transitive dependencies) and places them in the local repository. 
+Then, when you build your project, Maven includes these JAR files in the classpath of your application.
+This means that any classes, resources or other files contained within the JAR files of the dependencies will be available on the classpath and can be used by your application."
+Me lembrou no Desjardins, quando tinhamos uma biblioteca onde os scripts flyway ficavam la e nao no projeto principal
+
+
+-----------------------setting a system variable in java (specially in integration tests)--------------
+
+primeira ideia
+
+google: maven build tag to put a variable
+https://stackoverflow.com/questions/5510690/environment-variable-with-maven
+"OK, so you want to pass your system variable to your tests. If - as I assume - you use the Surefire plugin for testing, the best is to specify the needed system variable(s) within the pom, in your plugins section"
+
+
+segunda ideia (aprendi tbem o que eh um static initializer block)
+
+google: how to set a system  property in java before the tests start
+https://stackoverflow.com/questions/10997136/set-system-property-for-junit-runner-eclipse-to-test-a-spring-web-app
+"I am working on exactly the same problem now and hopefully found the way. You can call System.setProperty() into the static initializer of your test case."
+OR 
+google: how to set a system property in java before the test starts
+https://stackoverflow.com/questions/11306951/how-to-set-environment-variable-or-system-property-in-spring-tests
+"You can initialize the System property in a static initializer:"
+
+google: what is a static initializer of a test case in java
+https://www.appsdeveloperblog.com/12-java-static-initializer-block/#:~:text=In%20Java%2C%20a%20static%20initializer,class%20is%20loaded%20into%20memory.
+"In Java, a static initializer block is a block of code that is executed when a class is loaded into memory."
+
+ 
+--------------------Jenkins------------------------------
+
+environment variables in Jenkins:
+https://www.youtube.com/watch?v=KwQDxwZRZiE
+
+Jenkins File no proprio projeto eh pego pelo Jenkins (diferente do concourse, em que o pipeline que faziamos no Desjardins era feito pelo command line (fly etc)
+
+google: Jenkins stash (guardar um jar para ser usado depois em outras fases por exemplo)
+https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/
+and https://www.jenkins.io/doc/book/pipeline/docker/
+
+Using multiple agents in Jenkins (ensina a fazer un stash de arquivo tbem): (conceito importante no Jenkins: agent)
+https://docs.cloudbees.com/docs/cloudbees-ci/latest/automating-with-jenkinsfile/using-multiple-agents
+
+
+---links importantes:
+
+https://www.jenkins.io/doc/book/pipeline/
+https://www.jenkins.io/doc/book/pipeline/docker/#using-docker-with-pipeline
+
+como fazer chamadas http pelo Jenkins:
+https://www.jenkins.io/doc/pipeline/steps/http_request/
+
+Sandbox groovy: https://onecompiler.com/groovy
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------Database SQL-----------------------------------
+---------------------------------------------------------------------------------------------------------------------
+
+Relembrando que a tabela na base de dados estah associada a um schema. Para acessa-la: fazer schema_name.table_name
+
+Aprendi atomizacao das transacoes de base de dados com snowflake. Para inserir na joint table, em snowflake fazer um bloco BEGIN TRANSACTION ... COMMIT;
+Ver: https://docs.snowflake.com/en/sql-reference/transactions
+
+Aprendi: Dual table em base de dados Oracle: https://en.wikipedia.org/wiki/DUAL_table#:~:text=The%20DUAL%20table%20is%20a,such%20as%20SYSDATE%20or%20USER.
+
+Fizemos uma serie de stored procedures na base de dados, que nada mais sao que um script sql salvo que voce pode inputar dados
+
+Aprendi: temp tables: tabelas que desaparecem depois de uma sessao de conexao
+
+Aprendi: o que eh uma execution strategy (ou execution plan) numa query de sql: questao levantada quando tivemos uma view definida por um where: create view table_view as select * from a_table where id=2
+o que aconteceria se fizessemos uma query: select * from table_view where id=2  ? Sera que isso ele ele faria a execucao por completo da tabela para depois filtrar o resultado para pegar a linha id=2 ?
+A resposta eh nao, exatamente pelo execution strategy. O sql tem uma estrategia de execucao otima para trazer o resultado para o usuario, ainda que isso seja invisivel
+Ver: https://dba.stackexchange.com/questions/15363/are-views-optimized-when-i-add-a-where-clause-to-them
+
+
+aprendi: qualify no sql: interessante : https://www.datacamp.com/tutorial/qualify-the-sql-filtering-statement-you-never-knew-you-needed
+fala tbem de window function e common table expression (cte)
+ver tambem: https://www.sqlshack.com/sql-partition-by-clause-overview/
+partition faz um group by mantendo as linhas originais
+
+
+bug do Paul: bug interessante e relacionado com com o execution strategy. Essenciamente, nos ordenavamos as transacoes segundo um criterio e, se houvesse repeticao da transacao, pegavamos a primeira.
+O probleme eh que, as vezes, era possivel dar empate no ordenamento, nao garantindo que a primeira transacao seria sempre a mesma. Entao, quando rodavamos a query de agregacao, por vezes o execution 
+strategy do snowflake pegava uma transacao ou outra, causando um enorme problema 
+
+Aprendi: sequencias na base de dados (Orace gera as Ids atraves de sequencias ao inves de outras bases de dados que usam um autoincrement)
+Para acessa-las, posso fazer simplesmente Name_sequence.next por exmple
+
+Posso fazer um Dynamic Query nomes de tables variaveis: Execute IMMEDIATE 'aqui uma string que eh uma sql query'
+
+Para evitar problemas de paralelismo nas insercoes de uma tabela, posso fazer um merge:
+Em Snowflake: https://docs.snowflake.com/en/sql-reference/sql/merge
+
+-----------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------Spring Data------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+
+Tem DataSource object in Spring: uma das beans mais importantes, onde a configuracao de conexao eh feita
+
+como fazer uma query diretamente sem usar um repository (Entity manager)
+ver: https://stackoverflow.com/questions/53664050/in-spring-data-jpa-how-to-query-data-from-a-table-without-a-repository-for-enti#:~:text=If%20you%20do%20not%20want,from%20the%20injected%20entity%20manager.
+
+
+Spring Data Jpa nao podem criar tabelas. Tambem explica a diferenca entre DML statements and DDL statements.
+https://stackoverflow.com/questions/6141794/execute-a-create-table-query-through-the-jpa-entitymanager
+
+Com Spring data jpa, a conexao continua a ser feita com os parametros basicos: url (connection string), username and password): https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/#data.sql.datasource.configuration
+Entretanto, no contexto da conexao com Snowflake, o jpa nao tinha uma implementacao do snowflake tradiciona, o que fez fcom que que a propriedade spring.jpa.properties.hibernate.dialect 
+see: https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/#howto.data-access.jpa-properties
+and: https://www.tutorialspoint.com/hibernate/hibernate_configuration.htm
+MUITO INTERESSANTE: UMA SERIE DE ADAPTADORES DOS METODOS JAVA PARA A SQL QUERY DA LINGUAGEM!
+Ver: https://stackoverflow.com/questions/61338922/hibernate-dialect-for-snowflake
+
+Quando a entidade a ser persistida tiver um campo de enum, o campo eh registrado como o numero da sua enum, e nao a string da enumeracao. Para consertar isso, eh preciso acrescentar:
+@Enumerated(EnumType.STRING) no campo da enumeracao da classe da entidade
+
+Lembrei: Oracle database nao tem autoincrement. Usa uma sequencia para achar a nova id
+
+Quando fazemos uma entidade java ligada com uma tabela com a anotacao @Table(name="V_MY_TABLE") , nao ha problema algum de utilizar uma view aih
+
+
+Com Snowflake, a conexao a base de dados eh feita com um token ao inves de um password tradicional. Como o token expira em uma hora, Eric fez uma solucao boa:
+limitou o tempos da conexao a menos de 60 min com a propriedade: spring.datasource.hikari.max-lifetime
+
+-----------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------Spring Batch------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+
+Explicacao Pessoal:
+Essencialmente, o Spring Batch usa uma arquitetura muito comum: Voce tem um Job (ex: collectionJob) que depois tem varios Steps.
+Uma boa coisa tbem eh que a bilioteca tem uma solucao ja pronta para guardar um historico das execucoes dos Jobs (tabelas BATCH_JOB_EXECUTION, BATCH_STEP_EXECUTION etc)
+Para mais detalhes, ver anotacoes de configuracao de Snowflale com Spring Batch
+
+---
+O nosso projeto roda com um cronjob da AWS: tem algo interessante que ele executa os Jobs e depois para. Para fazer isso, colocamos na aplicacao Spring:
+
+public static void main(String[] args) {
+   System.exit(
+        SpringApplication.exit(
+            SpringApplication.run(MyApplication.class, args)));
+  }
+---
+google: spring boot with spring batch
+2 artigos que explicam bem o Batch Job com a dinamica de Reader/Processor/Writer
+https://www.baeldung.com/spring-boot-spring-batch
+https://www.baeldung.com/introduction-to-spring-batch
+Alem disso: "Starting with spring-boot 3.0, @EnableBatchProcessing annotation is discouraged"
+
+
+google: spring-batch tasklet ao inves de chunks no Spring batch
+explica bem a arquitetura de tasklet
+https://www.baeldung.com/spring-batch-tasklet-chunk
+
+---
+AQUI DOCUMENTACAO OFICIAL:
+https://docs.spring.io/spring-batch/reference/common-patterns.html#commonPatterns
+
+"@EnableBatchProcessing should not be used with DefaultBatchConfiguration. You should either use the declarative way of configuring Spring Batch through @EnableBatchProcessing, 
+or use the programmatic way of extending DefaultBatchConfiguration, but not both ways at the same time."
+https://docs.spring.io/spring-batch/reference/job/java-config.html#page-title
+
+"Until version 4.3, the @EnableBatchProcessing annotation exposed a transaction manager bean in the application context.
+ While this was convenient in many cases, the unconditional exposure of a transaction manager could interfere with a user-defined transaction manager.
+ In this release, @EnableBatchProcessing no longer exposes a transaction manager bean in the application context."
+https://docs.spring.io/spring-batch/docs/5.0.4/reference/html/whatsnew.html#:~:text=Until%20version%204.3%2C%20the%20%40EnableBatchProcessing%20annotation%20exposed%20a,a%20transaction%20manager%20bean%20in%20the%20application%20context. 
+
+
+version 4:
+https://docs.spring.io/spring-batch/docs/4.3.6/reference/html/index-single.html#configureJob
+
+"The default isolation level for that method is SERIALIZABLE, which is quite aggressive. READ_COMMITTED would work just as well. READ_UNCOMMITTED would be fine if two processes are not likely to collide in this way"
+https://docs.spring.io/spring-batch/docs/4.3.6/reference/html/job.html#:~:text=The%20default%20isolation%20level%20for%20that%20method%20is%20SERIALIZABLE%2C%20which%20is%20quite%20aggressive.%20READ_COMMITTED%20would%20work%20just%20as%20well.%20READ_UNCOMMITTED%20would%20be%20fine%20if%20two%20processes%20are%20not%20likely%20to%20collide%20in%20this%20way 
+
+
+O Spring Batch tem um task executor que executa as Jobs. O default eh um task executor simples e synchronous, mas eh possivel mudar para rodar jobs em paralelo e acelerar o build (Chat GPT me deu uma boa ideia)
+
+---------------------------------------------------------
+
+
+google: yaml anchors (arquivo de configuracao que eles usam)  (vi isso no Desjardins na documentacao de yaml do concourse)
+https://support.atlassian.com/bitbucket-cloud/docs/yaml-anchors/
+ideia de para definir uma ancora e para usa-la
+--------------------------------------------------------------------
+google: when you make many call to a spring api, do they all use the same singleton bean?
+https://www.baeldung.com/spring-singleton-concurrent-requests
+so it seems it indeed uses the same bean (questao do Abdellatif)
+
+Pour causa disso, tomar cuidado em mudar a configuracao de uma Bean do Spring no meio do codigo. Exemplo:objectMapper
+--------------------------------------------------------------------
+configuracao Spring com variavel de environment:
+Posso fazer: username: ${DATABASE_ORACLE_USERNAME}
+Isso esconde o valor e securiza aplicacao
+
+---------------------------------------------------------------------
+google: pact flow tutorials: interessante como tecnologia 
+
+google: difference between pact and pactflow
+Pact and Spring Cloud Contracts are API contract-testing tools that produces contracts. Pactflow manages the lifecycle of these contracts, and provides a workflow to manage them in your continuous delivery pipelines
+
+google: pact file example
+see published pact: https://docs.pact.io/5-minute-getting-started-guide
+
+google: what is a pact file?
+Pact is a code-first tool for testing HTTP and message integrations using contract tests 
+
+key word: pact broker (is it used only for replay?)
+my question: consumer-driven (record and replay) or bidirectional?
+
+third document: makes use of pact broker
+what does this mean? "Consumer and provider CI deployment
+builds check with the broker before deploying to ensure the 
+application version they are about deploy will be compatible with the versions of the other applications that are already in that environment"
+
+SHA: sort of a checksum as per the flyway algorithm
+---------------------------------------------------------------------------
+problema de certificado TSL do Java
+
+google the stack trace: sun.security.provider.certpath.suncertpathbuilderexception: unable to find valid certification path to requested target
+https://stackoverflow.com/questions/6908948/java-sun-security-provider-certpath-suncertpathbuilderexception-unable-to-find
+"In this article author describes how to fetch the certificate from your browser and add it to cacerts file of your JVM"
+Atencao que ele indica para pegar o root certificate
+
+google: pact-broker ssl (ensina no final como exportar um certificado pelo Mozilla FireFox)
+https://docs.pact.io/pact_broker/advanced_topics/using-tls
+
+
+tbem procurei: where is the truststore located in jdk 17
+achei um link interessant
+https://medium.com/@codebyamir/the-java-developers-guide-to-ssl-certificates-b78142b3a0fc#:~:text=The%20truststore%20comes%20bundled%20with,establishes%20a%20connection%20over%20SSL.
+----------------------------------------------------------------------
+Spring:
+Se eu tiver varios components que implementam uma interface, posso injetar uma lista dessa interface que o Spring vai pegar todas as possiveis (interessante)
+see also: https://stackoverflow.com/questions/53579112/inject-list-of-all-beans-with-a-certain-interface
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Termo aprendido/revisto: CA (Certificate Authorities)
+
+------------------------------------------------------------------
+google: injecting @Value in spring as static variable returns null
+https://www.baeldung.com/spring-inject-static-field
+"That's because Spring doesn't support @Value on static fields."
+----------------------------------------------------------------------------
+biblioteca para testes async (publica na queue do activemq):
+https://www.baeldung.com/awaitility-testing
+
+exemplo:
+
+await()
+        .pollDelay(1, TimeUnit.SECONDS)
+        .atMost(Duration.ofSeconds(5))
+        .untilAsserted(
+            () -> {
+              assertFalse(embeddedActivemqConsumer.getEvent.isEmty);
+              
+            });
+--------------------------------------------------------------------------------
+Spring: Mock vs MockBean (muda o contexto)
+https://www.baeldung.com/java-spring-mockito-mock-mockbean
+--------------------------------------------------------------------------------
+Spring: DirtiesContext (para limpar o contexto do Spring)
+https://www.baeldung.com/spring-dirtiescontext
+---------------------------------------------------------
+Spring: revisao de Jackson (unknown properties nao funciona por default na deserializacao do ackson)
+https://www.baeldung.com/jackson-deserialize-json-unknown-properties
+--------------------------------------------------------------------
+Relembrei a biblioteca Java Jfixture que usamos no Desjardins. 
+Estamos usando uma outra muito boa: Easy Random
+https://www.baeldung.com/java-easy-random
+----------------------------------------------------------------------------
+Vendo um pouco design pattern: Factory et Builder pattern para 
+-----------------------------------------------------------------------
+You can actually import a curl call to Postman
+see: https://stackoverflow.com/questions/27957943/simulate-a-specific-curl-in-postman
+--------------------------------------------------------------
+Vi a questao de OneToMany et ManyToOne no Spring Data:
+AQUI COLOCAR O LINK de referencia que achei: 
+Essencialmente: o campo da foreign key eh identificado pelo @JoinColumn na entity child:
+@ManyToOne
+@JoinColumn(name = "TRANSACTION_NUMBER")
+ParentEntity parentEntity
+
+enquanto que na entity parent:
+@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="financialTransaction")
+@ToString.Exclude
+private List<ChildEntity> ChildEntity;
+
+-----------------Views com Spring data------------------------
+Posso usar a anotacao @Table tbem para manipular Views exatamente como faco para tabelas assim 
+@Table(name="V_FINANCIAL_TRANSACTION")
+COLOCA LINKS INTERESSANTES
+-------------------------------------------------------------------------------------------
+Eh possivel iniciar um schema na base h2 a partir de sua url de conexao:
+https://stackoverflow.com/questions/5225700/can-i-have-h2-autocreate-a-schema-in-an-in-memory-database
+google: create a schema in h2 database
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------Liquibase e outras consideracoes----------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+
+Como funciona: muito parecido com flyway: Tem uma tabela de historico com todas as mudancas (DatabaseChangelog) e informacoes relevantes (datas, id, comentario etc)
+Cada changeset tem um checksum associado ao changeset para verificar a integridade do changeset e se nao foi adulterado
+Tambem tem uma tabela DatabaseChangeLock que apenas muda seu estado de true para false para evitar paralelismos
+
+Link de liquibase:
+https://www.baeldung.com/liquibase-refactor-schema-of-java-app
+
+Na Beneva usamos muito a tag de rollback: quando se executa o comando rollback, o liquibase roda o rollback associado ao changeset e deleta a linha na tabela DatabaseChangelog
+Na Beneva, na aplicacao de finance, fizemos um design de Kubernetes com init container: esse container era uma imagem liquibase que rodava antes da aplicacao: interessante como design
+ 
+
+https://docs.liquibase.com/concepts/changelogs/changeset.html#:~:text=A%20changeset%20is%20uniquely%20tagged,have%20to%20be%20an%20integer.
+"A changeset is uniquely tagged by both the author and id attributes (author:id), as well as the changelog file path.
+ The id tag is just an identifier—it doesn't direct the order that changes are run and doesn't have to be an intege"
+ 
+Interessante que um arquivo de changelog pode referenciar outro de forma em cascata Exemplo:
+
+<databaseChangeLog>
+    <include file="base/db.changelog-base.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog> 
+
+---
+
+google: i want to run a liquibase migration with spring boot from a library
+Link interessante: https://stackoverflow.com/questions/74471494/springboot-external-library-liquibase-migration
+A parte da resposta que mostra: lib.liquibase.change-log=classpath:/library.xml me fez lembrar que no fundo um arquivo 
+em uma biblioteca externa tbem pose ser referenciado pelo classpath (era assim no Desjardins os scripts fly way)
+
+ChatGPT: in a maven project, are files inside a dependency  included in the classpath?
+"Yes, files inside a dependency are included in the classpath of a Maven project.
+When you add a dependency to your Maven project, Maven downloads the required JAR files (and their transitive dependencies) and places them in the local repository. Then, when you build your project, Maven includes these JAR files in the classpath of your application.
+This means that any classes, resources or other files contained within the JAR files of the dependencies will be available on the classpath and can be used by your application."
+
+Documentacao oficial spring boot dizendo quando liquibase roda a migracao (startup e tbem nos testes). Para os testes, eh soh usar uma base h2 para que o liquibase rode ne e nao na na fase de build:
+https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/#howto.data-initialization.migration-tool.liquibase
+"When you add the org.liquibase:liquibase-core to your classpath, database migrations run by default for both during application startup and before your tests run.
+This behavior can be customized by using the spring.liquibase.enabled property, setting different values in the main and test configurations. It is not possible to use two different ways to initialize
+the database (for example Liquibase for application startup, JPA for test runs)."
+TESTAR: AO QUE PARECE, SE TIVERMOS UMA BILIOTECA QUE USA O org.liquibase:liquibase-core, ENTAO O PROJETO USANDO A BILIOTECA TBEM VAI FAZER A MIGRACAO
+
+outras consideracoes:
+google: flyway.locations prefix
+https://flywaydb.org/documentation/configuration/parameters/locations
+fala de classpath:, filesystem:, s3: etc
+Nao consegui achar nada relativo oficial na documentacao de liquibase
+
+google: understand the classpath and the filesystem prefix in java
+https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/resources.html
+"The following table summarizes the strategy for converting String objects to Resource objects:"
+e lista os possiveis prefixos (classpath etc)
+--
+MUITO INTERESSANTE:
+google: can you define a spring bean in a library instead of a project?
+https://stackoverflow.com/questions/41815871/spring-boot-autowire-beans-from-library-project
+Uma das respostas leva a esse link: https://docs.spring.io/spring-boot/docs/2.1.11.RELEASE/reference/html/boot-features-developing-auto-configuration.html
+que basicamente fala sobre classe de auto-configuration para bibliotecas e como carregar beans sem passar pelo component scan tradicional
+"Auto-configurations must be loaded that way only. Make sure that they are defined in a specific package space and that they are never the target of component scanning. 
+Furthermore, auto-configuration classes should not enable component scanning to find additional components. Specific @Imports should be used instead."
+
+Por acaso, quando dei um google em "spring.liquibase.changelog prefix"
+achei justamente esse link: https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/liquibase/LiquibaseProperties.html
+que estah dentro de um pacote de autoconfigure
+Na documentacao oficial por exemplo, ha um trecho interessante (https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/#howto.data-initialization.migration-tool.liquibase):
+"By default, Liquibase autowires the (@Primary) DataSource in your context and uses that for migrations. If you need to use a different DataSource, you can create one and mark its @Bean as @LiquibaseDataSource"
+Isso dah a entender que o DataSource eh uma bean 
+---
+Timezone settings in a Java Application
+https://www.baeldung.com/java-jvm-time-zone
+https://garygregory.wordpress.com/2013/06/18/what-are-the-java-timezone-ids/
+---
+quand houver um campo que eh um numero, melhor fazer como numero de fato. Alem de ser claro que eh numero, isso permite a criacao de objetos 
+elatorios como EasyRandom ou Jfixture para fins de testes
+---
+sql query to create a table in schema:
+CREATE TABLE [database_name.][schema_name.]table_name 
+see: https://www.sqlservertutorial.net/sql-server-basics/sql-server-create-table/
+
+----------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------Snowflake database------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------
+alguns problemas para fazer funcionar com spring data.
+
+O mais importante:
+google: cannot find an object with spring data jpa when using snowflake
+Esse eh O link para fazer snowflake funcionar com spring data.
+"It is possible, see this post: https://community.snowflake.com/s/question/0D50Z00008BEfEoSAL/has-anybody-built-an-application-using-java-spring-framework-that-connects-to-snowflake"
+"Note that if you want to use JPA's Mapping or Projection functionality, it is imperative that you set: CLIENT_RESULT_COLUMN_CASE_INSENSITIVE=true"
+
+e comecou com o seguinte problema quando tentando fazer method queries com Spring data com findById no repository:
+google: invaliddataaccessresourceusageexception: snowflake
+https://community.snowflake.com/s/question/0D53r0000BrKY1HCQW/has-anybody-faced-an-wierd-error-column-alias-not-found-error-using-java-springjpa-framework-that-connects-to-snowflake
+E
+https://stackoverflow.com/questions/73956624/has-anybody-faced-an-wierd-error-column-alias-not-found-error-using-java-spring
+
+google: integration tests with snowflake
+https://stackoverflow.com/questions/60419383/snowflake-integration-testing-implementation
+"(have a look at zero copy cloning which can really help with the "test" data side of things)"
+youtube: integration tests with snowflake
+https://www.youtube.com/watch?v=34uVDm-6D98
+youtube: zero copy cloning snowflake
+https://www.youtube.com/results?search_query=zero+copy+cloning+snowflake
+youtube: java integration tests with snowflake
+https://www.youtube.com/watch?v=tzbqj2y_cbw
+ChatGPT: Can you please tell me what a zero copy clone in snowflake database is?
+"One of the key benefits of using zero-copy clones is that they allow you to create isolated environments for testing or development purposes without the need to copy large amounts of data"
+google: snowflake jdbc url example
+https://docs.snowflake.com/en/developer-guide/jdbc/jdbc-configure
+google: zero copy clone snowflake
+https://community.snowflake.com/s/question/0D50Z00009C3VlMSAV/zero-copy-cloning
+google: how to create a clone of a schema in snowflake
+https://mindmajix.com/snowflake-cloning
+"Snowflake's ability for zero-copy cloning is an outstanding feature. It is the ability to make many copies of something without making a new physical copy or requiring more space to store them.
+ Since expenditures are reduced without restriction, significantly more liberty is available in the setting."
+
+---questao de commit atomizado no Snowflake---
+
+
+ChatGPT: if I try to insert 10 lines in snowflake database and it is not possible to insert 1 line, are the other 9 inserted either way?
+"In Snowflake, when performing an insert operation that involves multiple rows, the behavior depends on the type of insert statement you're using and the transactional behavior set for the session or the specific statement.
+By default, Snowflake operates in autocommit mode, which means each individual insert statement is treated as a separate transaction. In this case, if one row fails to be inserted due to an error or constraint violation, 
+the other rows that were already successfully inserted will remain committed in the database.
+However, if you're using an explicit transaction and have specified the BEGIN TRANSACTION statement before the insert operation, Snowflake will treat the insert statement as part of a single transaction.
+In this case, if any row within the transaction fails to be inserted, the entire transaction will be rolled back, and none of the rows will be committed to the database.
+
+To summarize:
+
+If you're using autocommit mode (default), each insert statement is treated as a separate transaction. Failed inserts won't affect the successful inserts, and the successful inserts will be committed.
+If you're using an explicit transaction, a failure in any row within the transaction will result in the entire transaction being rolled back, and no rows will be committed.
+It's important to consider the transactional behavior and error handling strategy when designing your data insertion process to ensure data integrity and consistency in your application."
+
+google: snowflake begin and commit transaction
+https://docs.snowflake.com/en/sql-reference/transactions
+e pesquisando no site oficial de snowflake, achei isso: Atencao que BEGIN nao quer dizer BEGIN TRANSACTION
+https://docs.snowflake.com/en/developer-guide/snowflake-scripting/blocks
+"The keyword BEGIN that starts a block is different from the keyword BEGIN that starts a transaction. To minimize confusion, 
+Snowflake strongly recommends starting transactions with BEGIN TRANSACTION (or the older form BEGIN WORK), rather than merely BEGIN."
+primeiro tinha achado pello google: https://docs.snowflake.com/en/sql-reference/snowflake-scripting/begin 
+          e depois tem um link para https://docs.snowflake.com/en/developer-guide/snowflake-scripting/blocks   
+
+------
+-----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------Mais com Snowflake database, agora com Spring--Batch e tbm spring data---------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------
+Primeiro problema nos logs que tive rodando com Spring-Batch"
+Error creating bean with name 'batchDataSourceInitializer' defined in class path resource [org/springframework/boot/autoconfigure/batch/BatchAutoConfiguration$DataSourceInitializerConfiguration.class]: Bean 
+instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.boot.autoconfigure.batch.BatchDataSourceScriptDatabaseInitializer]: 
+Factory method 'batchDataSourceInitializer' threw exception; nested exception is java.lang.IllegalStateException: Unable to detect database type
+Link importantissimo ao dar google: https://github.com/spring-projects/spring-boot/issues/28897
+Menciona duas ideias
+1-) "I think you may be able to work around the problem by defining your own DB initializer bean with empty settings:"
+2-) "If you rather leave the door open, you can specify the platform instead: spring.integration.jdbc.platform=sybase"
+No link, comentam, "We should check the various other initializers to see if they're affected too. Looking at the code, I think a similar problem would also occur with Spring Batch."
+(Nota suplementar: ao fucar na biblioteca procurando um BatchDataSourceScriptDatabaseInitializer, percebi que ele o getSettings faz  "settings.setContinueOnError(true)". 
+ Isso faz com que, se houver um erro no script, ele continua mesmo assim)
+
+Fiz a primeira ideia e comecei a ter un problema nos logs que a table BATCH_JOB_Instance "table batch_job_instance not found"
+Dando um google, achei um bom link: https://www.yawintutor.com/table-batch_job_instance-not-found-sql-statement/
+Descobri que eh importante fazer um set do spring batch initialize-schema para que as tabelas do spring batch sejam criadas
+"The “spring.batch.initialize-schema” property should be added in the application.properties to create the batch tables in the database. The property should be set to “ALWAYS” to create the batch tables in the database."
+
+Depois tentei a segunda solucao: spring.integration.jdbc.platform=snowflake, o que me deu "java.lang.IllegalStateException: No schema script found at location 'classpath:org/springframework/batch/core/schema-snowflake.sql"
+Foi entao que entendi melhor como o spring-batch cria essas tabelas: Ha uma serie de scripts sql para cada tipo de sql (oracle, sqlserver etc) par criar as tabelas do Batch. (para ver isso, entrar no codigo do Spring-Batch)
+O problema anterior da BATCH_JOB_Instance  era justamente que, com um database initializer vazio, as tabelas nao eram criadas. Provavelmente, essa classe pode ser usada para customizar os scripts
+Alias, tbem descobri que essa propriedade platform vem do spring-boot, nao do spring-batch: https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/#application-properties.integration.spring.batch.jdbc.platform
+
+O segundo problema importante que tive foi: 
+"DatabaseType not found for product name: [Snowflake] "
+achei um link importante https://stackoverflow.com/questions/72445144/databasetype-not-found-for-product-name-spark-sql
+o que me levou para um link da doc MUITO bom e importante:
+https://docs.spring.io/spring-batch/docs/current/reference/html/job.html#nonStandardDatabaseTypesInRepository
+acabei tendo que colocar a propriedade factory.setDatabaseType(DatabaseType.SQLSERVER.toString())    para evitar esse problema
+Reparar nesse trecho importante:
+"The major differences between platforms are mainly accounted for by the strategy for incrementing primary keys, so it is often necessary to override 
+the incrementerFactory as well (by using one of the standard implementations from the Spring Framework)."
+
+
+Aprendi que o Postgres eh o sql mais proximo do Snowflake:
+Problema do dialeto sql na propriedade spring.jpa.properties.hibernate.dialectorg.hibernate.dialect.SQLServer2012Dialect
+esmo nao havendo um dialeto snowflake, precisa colocar algum valor para fazer funcionar. Usei o ChatGpt:
+What is the best dialect to use in snowflake for the property spring. jpa.properties.hibernate.dialect ? 
+e, depois de uma resposta insatisfatoria,
+if I dont provide this property, I get the following error:
+Caused by: org.hibernate.HibernateException: Access to DialectResolutionInfo cannot be null when 'hibernate.dialect' not set
+"Apologies for the confusion in my previous response. If you're using Spring Data JPA with Snowflake, you can specify the Hibernate dialect to resolve the error you mentioned. 
+Although Snowflake has its own SQL dialect, you can use a compatible Hibernate dialect to work with Snowflake through Spring Data JPA.
+For Snowflake, you can use the Hibernate dialect for PostgreSQL, as it provides compatibility with Snowflake's SQL syntax and features."
+
+
+Entao uma hora perguntei para o ChatGpt (novamente):
+What is the closest hibernate dialect for snowflake?
+Entao ele me deu um BELA ideia:
+"As of my knowledge cutoff in September 2021, Hibernate does not have a specific dialect for Snowflake. However, you can use the org.hibernate.dialect.GenericDialect as a workaround, as Snowflake supports standard SQL syntax"
+"public class SnowflakeDialect extends Dialect "
+In your Hibernate configuration, set the dialect to SnowflakeDialect: jpaProperties.put("hibernate.dialect", "com.example.SnowflakeDialect");
+Entao dei um google: hibernate snowflake dialect project
+e achei essa joia: https://stackoverflow.com/questions/61338922/hibernate-dialect-for-snowflake
+"You can extend the SQLServer2012Dialect. I had to make a few changes to support sequences and correct the datetime type."
+public class SnowflakeDialect extends SQLServer2012Dialect { ...etc
+Descobri que ha uma serie de dialetos que voce entao pode fazer um override. Funcionou que eh uma beleza.
+Com isso, tbem aprendi sobre a tabela dual na query "select " + getSelectSequenceNextValString( sequenceName ) + " from dual"
+https://en.wikipedia.org/wiki/DUAL_table
+
+Quand perguntei ao ChatGPT: How would you configure spring batch with snowflake?
+Ele me deu um exemplo com 
+@Bean
+  public PlatformTransactionManager transactionManager() {
+    return new DataSourceTransactionManager(dataSource);
+  }
+Isso era diferente dos exemplos que tinha visto de spring-batch que usavam a implementacao ResourcelessTransactionManager().
+Pesquisando, vi que de fato ResourcelessTransactionManager nao era adequado para meu caso
+
+
+
+Tentado fazer o ticket de funcionar batch com snowflake, descobri varias coisas tbem
+1-) o dialeto (spring.jpa.properties.hibernate.dialect) eh o FQN (fully qualified name) da classe (ou seja, inclui o nome do pacote nele. Exemplo: org.hibernate.dialect.SQLServer2012Dialect  (classe de hibernate-core )
+Descobri pelo ChatGPT: "Replace "com.example.SnowflakeDialect" with the fully qualified name of your custom dialect class."
+2-) Lembrei de um link importante quando tive o primeiro contato com spring batch: https://www.baeldung.com/introduction-to-spring-batch
+"Starting with spring-boot 3.0, @EnableBatchProcessing annotation is discouraged. We declare manually JobRepository, JobLauncher and TransactionManager bean"
+e https://docs.spring.io/spring-batch/docs/current/reference/html/whatsnew.html#transaction-manager-bean-exposure
+"Until version 4.3, the @EnableBatchProcessing annotation exposed a transaction manager bean in the application context. 
+While this was convenient in many cases, the unconditional exposure of a transaction manager could interfere with a user-defined transaction manager.
+ In this release, @EnableBatchProcessing no longer exposes a transaction manager bean in the application context."
+3-) Lendo a doc do spring batch, vi  que nao eh bom misturar @EnableBatchProcessing  com DefaultBatchConfiguration como estavamos fazendo
+https://docs.spring.io/spring-batch/docs/current/reference/html/job.html#configuringAJob 
+"@EnableBatchProcessing should not be used with DefaultBatchConfiguration. You should either use the declarative way of configuring Spring Batch 
+through @EnableBatchProcessing, or use the programmatic way of extending DefaultBatchConfiguration, but not both ways at the same time"
+4-) Tbem tive um problema com Database Isolation (um problema que tinha tido antes com o Oracle)
+https://docs.spring.io/spring-batch/docs/4.3.6/reference/html/job.html#configuringJobRepository
+"The default isolation level for that method is SERIALIZABLE, which is quite aggressive. READ_COMMITTED would work just as well."
+Coloquei na config do JobRepository coloquei factory.setIsolationLevelForCreate("ISOLATION_READ_COMMITTED"); 
+5-) Tbem caih nesse link da doc: https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html#:~:text=Many%20database%20vendors%20do%20not%20support%20sequences.%20In%20these%20cases%2C%20work-arounds%20are%20used%2C%20such%20as%20the%20following%20statements%20for%20MySQL
+"Many database vendors do not support sequences. In these cases, work-arounds are used, such as the following statements for MySQL:"
+Eh o caso, por exemplo, do SqlServer que estava usando inicialmente. Ele criava tabelas ao inves de sequencias
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------- Active MQ e Virtual Topics--------------------------------------
+google: activemq virtual topic
+
+https://activemq.apache.org/virtual-destinations
+https://tuhrig.de/virtual-topics-in-activemq/   (artigo interessante explicando o que eh um Virtual Topic)
+
+AND
+
+google: activemq topic queue and virtual topics
+
+https://tuhrig.de/queues-vs-topics-vs-virtual-topics-in-activemq/
+https://itnext.io/understanding-virtual-destinations-in-activemq-with-an-example-cc814e8613d7
+
+google: activemq basics, quick start ou tutorial
+
+google: spring jms
+https://spring.io/guides/gs/messaging-jms/
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------Spring Project Reactor and Webflux ------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Explicacao pessoal: O projeto webflux eh um espelho da biblioteca spring-mvc, que usa tomcat e servlets para funcionar e tem blocking threads.
+Tudo gira em torno de objetos Mono (o que que eu aprendi mais) e Flux. Posso fazer muita coisa com o objeto Mono: crio um objeto Mono e depois 
+faco um subscribe nesse objeto para reagir ao que aconteceu. Alguns metodos muito comuns
+- Mono.just 
+- Mono<ResponseEntity<String>> result = myController.createSomething(
+        templatedDocument, correlationId);
+	result.subscribe( (  reponseEntity -> System.out.println(responseEntity));
+- Mono<String> result = Mono.just.log();
+- Mono.fromSupplier (call back aqui)
+- Mono.just("some text").doOnSuccess((response) -> System.out.println("this is a success"))
+        .doOnError((response) -> System.out.println("this is a success"));
+		lembra muito a dinamica de promisses
+
+
+Fazendo alguns tests num projeto sandbox de webflux com Mono.fromSupplier(callback) dentro de um metodo de controller que retorna um Mono tbem, o que percebi:
+de fato, depois que Mono.fromSupplier(callback) eh chamado no metodo, a linha seguinte continua a executar. O que eh interessante eh que
+mesmo assim o controller vai esperar que o Mono.fromSupplier(callback) retorne para que o controller mesmo deh uma resposta.
+FAZER MAIS TESTES: dois metodos com Mono.fromSupplier
+De toda forma, isso deu um insight de como Webflux funciona: ao fazer que o tipo retornado seja um Mono<String>, o framework provavelmente estah fazendo um subscribe de retorno 
+desse metodo para enfim dispachar a resposta para o usuario final 
+
+Ainda preciso entender se para que seja um projeto totalmente reativo todos os metodos precisam retornar Mono. Me parece um pouco boilerplate demais
+
+Uma das maiores mudancas com Webflux eh seu Cliente Http para chamadas que nao bloqueiem: A classe Webclient substitui o antigo Resttemplate (funciona mais no esquema de JavaScript)
+
+para metodos void posso usar o tipo Mono<void>
+
+Para verificar metodos chamados dentro de um Mono.fromSupplier, mockito nao funciona, mas eh possivel fazer um workaround. Ver chatGpt:
+https://chat.openai.com/c/d2fc3065-4cf0-435e-89ed-b5c5490371da
+
+
+O GlobalExceptionHandler funciona parecido com o spring-mvc: as excecoes sao as mesmas na minha experience
+
+
+---
+Alguns links interessantes:
+
+google: migrating spring-webmvc to webflux
+link muito bom para uma migracao de projeto ja existente
+https://blog.devgenius.io/migrating-from-spring-web-mvc-to-spring-web-flux-dff8d82af759
+
+google: does webflux run on a war
+Otimo link, bem completo sobre Webflux. Nao tem tanto a ver com o que foi pesquisado, mas excelente artigo. Tbm ensina a fazer um start up do projeto
+https://hantsy.medium.com/reactive-programming-with-spring-5-3bfc5d324ba0#:~:text=Spring%205%20provides%20a%20WebTestClient%20to%20help%20you%20test%20reactive%20server%20side%20APIs.%20It%20is%20similar%20with%20WebClient%2C%20but%20provides%20more%20facilities%20to%20interact%20with%20server%20in%20a%20test%20environment. 
+
+google: when is webflux a better fit ?
+interessante o que a doc oficial fala: bem honesta quanto as dificuldades do projeto
+https://docs.spring.io/spring-framework/reference/web/webflux/new-framework.html#webflux-framework-choice
+
+
+youtube:spring boot webflux
+um bom video para os conceitos core de webflux (com o log e subscribe)
+https://www.youtube.com/watch?v=ckfqcfzCg3w&t=488s
+
+google: mono.just vs mono.fromSuplier
+excelente artigo para explicar sobre como chamar blocking methods de forma asyncrona com o a biblioteca
+https://codersee.com/mono-just-defer-fromsupplier-create-part-1/
+
+
+Baeldung oferece uma serie de artigos bons para entender webflux:
+https://www.baeldung.com/spring-webflux
+google: does webflux work with servlet
+bom artigo sobre filtros etc
+https://www.baeldung.com/spring-mvc-async-vs-webflux#:~:text=Spring%20WebFlux%20supports%20reactive%20backpressure,any%20Servlet%203.1%2B%20compatible%20server.
+https://www.baeldung.com/spring-webflux-filters
+
+
+outro bom link:
+https://reflectoring.io/getting-started-with-spring-webflux/
+
+google: when to use webflux
+Bom artigo para o core de reactor
+https://gokhana.dev/reactive-programming-with-spring-webflux/#:~:text=Spring%20WebFlux%20is%20a%20suitable,with%20less%20resources%2C%20and%20scalability.
+
+---
+
+Com esse ticket: APRENDI: filters e interceptors (MUITO INTERESSANTE).
+Tbem temos uma bilioteca Zalando para logar 
+https://github.com/zalando/logbook/blob/main/logbook-httpclient/src/main/java/org/zalando/logbook/httpclient/LogbookHttpResponseInterceptor.java
+
+---(tests) 
+google: should you avoid for loops in spring webflux 
+
+link bem interessante falando dos event loops e como calcular quantas threads nos temos:
+https://kkgulati.medium.com/avoid-reactor-freeze-reactive-programming-fdc0b4b5991#:~:text=If%20you%20would,netty.workerCount%3D16
+
+---
+google: how to get the content of a mono
+ensina bem como pegar o content de maneira bloqueando (blocking)
+https://www.baeldung.com/java-string-from-mono
+
+se nao quiser bloquear, PA me passou um bom artigo de uma biblioteca para fazer testes:
+https://www.baeldung.com/reactive-streams-step-verifier-test-publisher
+
+ver tbem ChatGPT em avril de 2024: https://chatgpt.com/c/3feb9833-48da-4da2-9168-0bc60cf561a4
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------TestContainers e local stack---------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Posso usar bibliotecas java de test containers para usar uma imagem docker (docker precisa estar rodando)
+Dessa forma, nao preciso rodar separadamente o container como tinha feito na biblioteca do Desjardins com a base de dados. 
+Posso usar a a biblioteca java para inicializar o container
+
+
+video de configuracao sqs e s3
+https://testcontainers.com/guides/testing-aws-service-integrations-using-localstack/
+
+
+google: aws sqs localstack
+mostra os comandos awslocal sqs receive-message. Dessa forma, quando os testes java enviam uma mensagem ao SQS, podemos ver se a mensagem eh recebida
+https://docs.localstack.cloud/user-guide/aws/sqs/
+
+Bom video do Amigos code que tinha comentado sobre testcontainers e a nao recomendacao de usar base h2:
+https://www.youtube.com/watch?v=27t5I-9VaPQ
+
+
+
+-------------onion architecture (PA e Pierre me mandaram)--------------
+separacao de packages domain / resource (ou dto) / infra
+infra sendo o outer circle e domain o inner circle. Um circulo externo pode depender de um interno, mas nao o contratio (domain nao pode depender de infra por exemplo)
+https://medium.com/expedia-group-tech/onion-architecture-deed8a554423
+
+-------------------------------------Configuration ssh para git (bitbucket)-------------------------------
+
+1-) Ouvrir la console "Git Bash" ou votre WSL2 avec ubuntu
+2-) Entrer la commande: ssh-keygen -t rsa -b 4096 -C "your_mail@beneva.ca" 
+3-) Accepter les options par défaut.
+4-) Chosissez un passphrase
+5-) Dans le répertoire de votre home => .ssh vous avez deux fichiers "id_rsa" (le clé privée) et "id_rsa.pub" (le clé publique)
+6-) Entrer votre clé publique dans Bitbucket (Cles SSH). (Le contenue du fichier "id_rsa.pub")
+
+Tbem ver: google: how to create a key pair for ssh
+https://docs.oracle.com/en/cloud/cloud-at-customer/occ-get-started/generate-ssh-key-pair.html
+google: how to generate a key value pair in gitbash
+https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key
+
+---------------------------------------------Cucumber---------------------------------------
+
+o Cucumber ja foi visto no Desjardins em 2022. Essencialmente, ha um arquivo cucumber de features em linguagem Gherkin (terminado em .feature mesmo)
+com a descricao de cenarios do comportamento desejado e redigido em liguagem nao tecnica. Cada cenario tem uma serie de passos (steps) GIVEN/ WHEN / THEN
+O desenvolvedor pega entao esse arquivo cucumber  e faz seus testes na linguagem desejada (Java por exemplo) com um mapping dos passos descritos no arquivo 
+cucumber com os metodos da linguagem de programacao (glue code). Em Java, esse mapping eh feito por anotacaoes no metodos. Exemplo: @Given("the productName {string}")
+Como o programador tem esse arquivo de features descrevendo o comportament desejado, o cucumber eh muito associado com BDD (behavior driven development)
+
+o site oficial eh excelente:
+https://cucumber.io/docs/guides/overview/
+
+google: cucumber with spring boot
+Otimo artigo que serviu de base para nossa configuracao de cucumber
+https://medium.com/@francislainy.campos/integrating-cucumber-into-a-spring-boot-project-a-step-by-step-guide-f899c04bf81f
+
+Tbem ver: https://cucumber.io/docs/cucumber/api/?lang=java
+"This will execute all scenarios in same package as the runner, by default glue code is also assumed to be in the same package"
+
+---------------------------------------------Spring 3 Migration---------------------------------------
+
+Entendi: Questao de javax e jakarta (mesmo pacote, mas por algum motivo de direitos mudaram o nome de javax e jakarta)
+O spring 3 descontinuou o javax por completo
+https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#jakarta-ee
+"You need to be especially careful that older Java EE dependencies are no longer directly or transitively used in your build. 
+For example, if you should always be using jakarta.servlet:jakarta.servlet-api and not javax.servlet:javax.servlet-api."
+"Spring Boot 3.0 builds on a requires Spring Framework 6.0. You might want to review their upgrade guide before continuing."
+
+google: swagger annotations with spring boot v3
+https://medium.com/@f.s.a.kuzman/using-swagger-3-in-spring-boot-3-c11a483ea6dc
+"Apparently, Spring Boot 3 needs a different library than Spring Boot 2 to be able to use Swagger 3. Let’s set it up in a new project and see how to use the most basic features."
+
+------------------------------------------Java Validation Basics---------------------------------
+
+https://www.baeldung.com/java-validation
+"A quick note: hibernate-validator is entirely separate from the persistence aspects of Hibernate. So by adding it as a dependency, we’re not adding these persistence aspects into the project."
+Explica Validation programatica tambem
+
+ver tambem: https://howtodoinjava.com/hibernate/hibernate-validator-java-bean-validation/
+
+google: java @Valid annotation
+https://stackoverflow.com/questions/3595160/what-does-the-valid-annotation-indicate-in-spring
+Boa explicacao da anotacao @Valid:
+"Spring 3 provides support for declarative validation .... When enabled, you can trigger validation simply by annotating a Controller method parameter with the @Valid annotation: 
+After binding incoming POST parameters, the AppointmentForm will be validated; in this case, to verify the date field value is not null and occurs in the future. "
+
+------------------------------------------PactFlow-----------------------------------
+
+ver arquivo dedicado ao topico
+
+------------------------------------------Snowpark (Biblioteca snowflake para fazer stored procedures em java)-----------------------------------
+
+
+https://docs.snowflake.com/en/developer-guide/snowpark/java/working-with-dataframes#specifying-how-the-dataset-should-be-transformed
+
+https://docs.snowflake.com/en/developer-guide/snowpark/java/sql-to-snowpark
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
