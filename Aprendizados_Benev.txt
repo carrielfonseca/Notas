@@ -70,7 +70,7 @@ Relembrei mockito https://www.baeldung.com/java-spring-mockito-mock-mockbean
 Usar Clock Java para fazer Time Travel na aplicacao Java de batch: boa solucao do Eric
 https://medium.com/@aleksanderkolata/time-travel-in-java-do-you-have-a-clock-3c9060059561
 ---
-Interessante a estrutura do projeto que a Beneva usa: para testes que rodam o contexto Spring completo, usam uma pasta de teste "it" (integration test)
+Interessante a estrutura do projeto que a usa: para testes que rodam o contexto Spring completo, usam uma pasta de teste "it" (integration test)
 Depois usam um maven plugin para adicionar essa pasta no classpath
 Nome do plugin: build-helper-maven-plugin
 ---
@@ -486,8 +486,8 @@ Tambem tem uma tabela DatabaseChangeLock que apenas muda seu estado de true para
 Link de liquibase:
 https://www.baeldung.com/liquibase-refactor-schema-of-java-app
 
-Na Beneva usamos muito a tag de rollback: quando se executa o comando rollback, o liquibase roda o rollback associado ao changeset e deleta a linha na tabela DatabaseChangelog
-Na Beneva, na aplicacao de finance, fizemos um design de Kubernetes com init container: esse container era uma imagem liquibase que rodava antes da aplicacao: interessante como design
+Usamos muito a tag de rollback: quando se executa o comando rollback, o liquibase roda o rollback associado ao changeset e deleta a linha na tabela DatabaseChangelog
+Na aplicacao de financas, fizemos um design de Kubernetes com init container: esse container era uma imagem liquibase que rodava antes da aplicacao: interessante como design
  
 
 https://docs.liquibase.com/concepts/changelogs/changeset.html#:~:text=A%20changeset%20is%20uniquely%20tagged,have%20to%20be%20an%20integer.
@@ -866,12 +866,12 @@ https://medium.com/expedia-group-tech/onion-architecture-deed8a554423
 
 -------------------------------------Configuration ssh para git (bitbucket)-------------------------------
 
-1-) Ouvrir la console "Git Bash" ou votre WSL2 avec ubuntu
-2-) Entrer la commande: ssh-keygen -t rsa -b 4096 -C "your_mail@beneva.ca" 
-3-) Accepter les options par défaut.
-4-) Chosissez un passphrase
-5-) Dans le répertoire de votre home => .ssh vous avez deux fichiers "id_rsa" (le clé privée) et "id_rsa.pub" (le clé publique)
-6-) Entrer votre clé publique dans Bitbucket (Cles SSH). (Le contenue du fichier "id_rsa.pub")
+1-) Abrir "Git Bash"
+2-) Digitar o comando: ssh-keygen -t rsa -b 4096 -C "your_mail"
+3-) Aceitar opcoes por default
+4-) Escolha um passphrase
+5-) Na pasta home => .ssh ha dois arquivos: "id_rsa" (le a chave privada) e "id_rsa.pub" (a chave publica)
+6-) Colocar a chave publica no Bitbucket (chaves SSH). (O conteudo do arquivo "id_rsa.pub")
 
 Tbem ver: google: how to create a key pair for ssh
 https://docs.oracle.com/en/cloud/cloud-at-customer/occ-get-started/generate-ssh-key-pair.html
