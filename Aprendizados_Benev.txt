@@ -119,10 +119,8 @@ https://docs.pact.io/faq#:~:text=If%20you%20need%20to%20make%20a%20breaking%20ch
 ---
 AQUI OS LINKS BAELDUNG DAS TEST PROPERTY SOURCES
 ----
-MOCKMVC E CONFIGURACAO BASICA
----
-MIGRACAO SPRING 3: 
-
+MockMvc no Spring: com Mock-mvc nos testes, podemos testar chamadas ao controller. Se usar webflux, usar WebTestClient
+@AutoConfigureMockMvc and @AutoConfigureWebTestClient
 
 ------------
 mock static in Java with mockito
@@ -130,10 +128,14 @@ https://www.baeldung.com/mockito-mock-static-methods
 --------
 TestConfiguration com Spring
 
+---------------------
+google: how to access h2 console when running a test
+https://hrrbrt.medium.com/using-h2-during-test-debugging-in-spring-f6a3db355e3a
+Posso acessar o h2 console se eu bloquear apenas a thread no debugger
 
 
 
-------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
 
