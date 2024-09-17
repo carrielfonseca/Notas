@@ -239,7 +239,7 @@ File -> Settings seems more like the Windows Preferences you have on Eclipse
 File -> Project Structure (para escolher o jdk e outras opcoes especificas do projeto - especifico ao projeto em si, nao tanto a config global do Intellij)
 File -> New Project from Version Control  (para importar um repositorio no github)
 A tab git fica embaixo a esquerda e a branch sendo usada eh embaixo a direita
-a brach git 
+a branch git
 Tab Git on the left (Roll Back)
 Aziza me ensinou: como mudar o terminal do Intellij: File -> Setting -> Terminal e depois colocar: Shell Path = C:\Users\DXI9816\AppData\Local\Programs\Git\bin\bash.exe
 ctrl + shift + F	search for a word
@@ -258,7 +258,7 @@ Para configurar remote repos (mudar a url de origem do projeto): Git -> Manage R
 Para ver quem fez os commits: "Annotate with Git Blame"
 
 Quando voce cria um arquivo .sh no Intellij ele disponibiliza um botao play para rodar
-No nosso projeto, tinhamos um jar de wiremock que, se nao me engano, o Intellij tbem disponibilizava um botao para rodar
+No nosso projeto, tinhamos um jar de billing-wiremock que, se nao me engano, o Intellij tbem disponibilizava um botao para rodar
 
 -------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------gradle----------------------------------------------------------------------------
@@ -312,7 +312,7 @@ https://docs.gradle.org/current/userguide/viewing_debugging_dependencies.htmlins
 
 ------Outros pontos interessantes:
 https://blog.gradle.org/introducing-compile-only-dependencies
-(ver anotacao do celular sobre isso)
+(ver anotacao no arquivo de maven sobre isso)
 
 how to exclude transitive dependencies in gradle:
 (achar um link e botar aqui)
