@@ -1,0 +1,127 @@
+***************************************quick start**********************************
+
+- Instalar Node
+- rodar npm init para comecar um projeto do zero (vai criar um projeto com um package.json)
+- node {arquivo de entry point} para rodar o projeto
+- se for fazer um projeto git, nao esquecer de fazer um git ignore na pasta node_modules, que eh onde ficam as dependencias
+- quando pegar um novo projeto: rodar npm install (vai instalar as dependencias listadas no package.json)
+- olhar no projeto a sessao scripts no package.json. La pode rodar o comando npm run {nome do script}. Exemplo: npm run start
+
+
+
+***************************************Fontes pra comecar**********************************
+
+https://www.w3schools.com/nodejs/default.asp
+https://nodejs.org/en/learn/getting-started/introduction-to-nodejs
+
+Bom tutorial de uma hora do Mosh:
+https://www.youtube.com/watch?v=TlB_eWDSMt4&t=2905s
+
+
+youtube: how to start a node project
+https://www.youtube.com/watch?v=0JD9TIKRRWc
+npm init : inicia um projeto com package.json (usado para bootstrap o codigo)
+Mostra tbem que colocamos o script npm no package.json
+ex: "scripts": {
+        "compile": "tsc"
+    }
+dai pode-se fazer npm run compile no command line
+
+---parte typescript se for necessario:
+
+https://www.w3schools.com/typescript/typescript_getstarted.php
+npm install typescript --save-dev
+
+https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html
+
+-------------
+
+
+*************************************Fundamentos*****************************************
+os arquivos de javascript terminam por .js enquanto os typecript termina pour .ts
+
+o entrypoint do node (main method) eh normalmente um arquivo chamado index.js ou app.js
+
+a gestao de dependencias do node eh informada no arquivo package.json. O equivalente do pom.xml do maven
+
+os imports sao feitos ou pela sintaxe de import required ou pela sintaxe mais nova de import '../path relativo do arquivo'
+eh um pouco diferente do java que usa a nocao de pacotes e aestrutura de arquivos fica implicita e nao tao clara quanto no Node
+
+O equivalente no Node do .m2, o repositorio local das dependencias no maven, eh a pasta node_modules
+A ideia eh um pouco diferente porque eh uma pasta normalmente colocada no nivel do projeto, nao uma pasta global como a .m2
+No entanto, existe tbem um node_modules global localizado na pasta de onde estah localizado o node
+
+O equivalente do site maven central no node eh site do node package manager:
+https://www.npmjs.com/
+
+
+default e named imports em javascript: ver
+
+
+Diferente do Java, que tem a ideia de um arquivo, uma classe, o javascript permite um arquivo com classes e varias funcoes e interfaces, o que muda bastante a organizacao do codigo
+
+export function para tornar ela acessivel a outros arquivos
+
+
+--typescipt
+Para usar Typescript, eh preciso compilar typescript para javascript, um processo tbem conhecido pour transpile.
+Ver: https://nodejs.org/en/learn/getting-started/nodejs-with-typescript
+E: https://www.typescriptlang.org/docs/handbook/compiler-options.html
+
+comando tsc
+
+O arquivo tsconfig-json eh importante para a configuracao do typescipt.
+Podemos definir opcoes para o output dos arquivos typescript em javascript (outDir) e varias outras opcoes
+
+
+
+*********************************Ide*******************************
+
+O Intellij reconhece os scripts colocados no package.json, onde voce pode apertar umn botao play para roda-los e 
+permite a configuracao de projetos Node Ou Npm para rodar
+
+Se fizer uma configuracao de tipo Node no Intellij, pode informar o arquivo de entry point nas opcoes
+Alem disso, eh possivel informar pre scripts para rodar, o que serve bem para um projeto type script que precisa ser transpilado antes de rodar
+
+
+***********************Gestao de dependencias em Node (maven)****************
+
+equivalente de pom.xml(do maven) : package.json
+
+Em termos genericos, Node trabalha com npm (node package manager) ao inves de maven
+Esse npm tbem tem seu proprio repositorio de packages na nuvem assim como o maven central: https://www.npmjs.com/
+para instalar um pacote local, fazer: npm install [nome_do_pacote]
+
+
+google: node equivalent of maven
+https://stackoverflow.com/questions/38388824/is-maven-similar-to-npm
+
+node_modules: pasta importante onde ficam as dependencias. A filosofia do node eh ter essa pasta no nivel do projeto (nao global como o maven tem o .m2)
+De toda forma eh possivel instalar globalmente usando a opcao -g do command line. Ex: npm install -g [nome_do_pacote]
+
+ver: https://www.w3schools.com/nodejs/nodejs_npm.asp
+"NPM creates a folder named "node_modules", where the package will be placed
+"The NPM program is installed on your computer when you install Node.js"
+
+
+
+
+***************Comandos uteis*********************
+
+npm init
+node index.js (roda o arquivo index.js)
+npm install  (instala o que estah no package.json)
+
+
+how to run typescript with node
+https://nodejs.org/en/learn/getting-started/nodejs-with-typescript
+npx tsc index.ts
+
+npm i -D ts-node  (instala ts-node)
+npx ts-node example.ts (roda)
+
+
+***********************Links*********************
+
+JavaBrains: https://www.youtube.com/watch?v=hQd4TCGB_nE&list=PLqq-6Pq4lTTa-d0iZg41U2RDqECol9C5B
+
