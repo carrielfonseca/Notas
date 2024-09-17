@@ -231,6 +231,7 @@ https://www.jenkins.io/doc/book/pipeline/docker/#using-docker-with-pipeline
 
 como fazer chamadas http pelo Jenkins:
 https://www.jenkins.io/doc/pipeline/steps/http_request/
+(ver link "Pipeline Steps reference")
 
 Sandbox groovy: https://onecompiler.com/groovy
 
