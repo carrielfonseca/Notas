@@ -95,7 +95,6 @@ Chat GPT (fev 2024): "In kubernetes, what is this?
 finance.namespace.svc.cluster.local"
 
 https://chatgpt.com/share/58bc3f54-5bdf-424b-9975-10cbcbb0c20b
-
 Basicamente eh um host que o Kubernetes designa ao servico. Segundo o link, servicos no mesmo namespace normalmente nao precisam de autentificacao
 
 
@@ -138,3 +137,18 @@ https://helm.sh/docs/chart_template_guide/builtin_objects/
 ************Terraform**************
 
 ver videos no you tube salvos nos favoritos
+
+
+*****************Aws Lambda*****************
+curso de duas horas muito bom:
+falar de DLQ
+EventBridge: eventos, eventbus, event (Medium)
+achar mencao de dockerhub / (ECR)
+mencao de runtime: a linguage da lambda
+como testar: sempre dah para testar diretamente no console da AWS
+
+
+
+
+
+

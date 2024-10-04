@@ -647,6 +647,25 @@ Foi entao que entendi melhor como o spring-batch cria essas tabelas: Ha uma seri
 O problema anterior da BATCH_JOB_Instance  era justamente que, com um database initializer vazio, as tabelas nao eram criadas. Provavelmente, essa classe pode ser usada para customizar os scripts
 Alias, tbem descobri que essa propriedade platform vem do spring-boot, nao do spring-batch: https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/#application-properties.integration.spring.batch.jdbc.platform
 
+Obs sobre a investigacao:
+Pprocurando schema-  na documentacao de spring boot:
+
+Achei:
+1-) a propriedade spring.batch.jdbc.schema  (foi essa propriedade que mudei e coloquei classpath:batch-initializer/schema-snowflake.sql
+para inicializar as tabelas do spring batch). Me inspirei nos scripts schema-  que achei na biblioteca do spring batch
+2-) acha no link https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/#howto.data-initialization.using-basic-sql-scripts
+   "Spring Boot can automatically create the schema (DDL scripts) of your JDBC DataSource or R2DBC ConnectionFactory and initialize it (DML scripts).
+   It loads SQL from the standard root classpath locations: schema.sql and data.sql, respectively.
+   In addition, Spring Boot processes the schema-${platform}.sql and data-${platform}.sql files (if present), where platform is the value of spring.sql.init.platform
+
+Tambem pesquisando a documentacao especifica de spring batch isso eh mencionado:
+https://docs.spring.io/spring-batch/docs/4.3.6/reference/html/index-single.html#exampleDDLScripts
+"The Spring Batch Core JAR file contains example scripts to create the relational tables for a number of database platforms (which are, in turn, auto-detected by the job repository factory bean or namespace equivalent).
+These scripts can be used as is or modified with additional indexes and constraints as desired.
+The file names are in the form schema-*.sql, where "*" is the short name of the target database platform. The scripts are in the package org.springframework.batch
+
+
+
 O segundo problema importante que tive foi: 
 "DatabaseType not found for product name: [Snowflake] "
 achei um link importante https://stackoverflow.com/questions/72445144/databasetype-not-found-for-product-name-spark-sql
