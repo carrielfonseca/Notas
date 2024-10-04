@@ -136,6 +136,9 @@ google: how to access h2 console when running a test
 https://hrrbrt.medium.com/using-h2-during-test-debugging-in-spring-f6a3db355e3a
 Posso acessar o h2 console se eu bloquear apenas a thread no debugger
 
+------
+Interessante o conceito de DLQ: se nao processa a chamada, manda o payload para essa DLQ que depois pode ser
+relancada por alguem
 
 
 -----------------------------------------------------------------------------------

@@ -139,13 +139,27 @@ https://helm.sh/docs/chart_template_guide/builtin_objects/
 ver videos no you tube salvos nos favoritos
 
 
-*****************Aws Lambda*****************
-curso de duas horas muito bom:
-falar de DLQ
-EventBridge: eventos, eventbus, event (Medium)
-achar mencao de dockerhub / (ECR)
-mencao de runtime: a linguage da lambda
-como testar: sempre dah para testar diretamente no console da AWS
+*****************Aws Lambda e EventBridge*****************
+curso de duas horas muito bom: Introduction to AWS Lambda - A 2-hour Crash Course. Instructor: Rick Crisci
+No curso: "ECR is aws version of dockerhub"
+
+O Lambda tem um conceito de DLQ se voce quiser adicionar que voce pode ter como target
+
+para disparar uma lambda, eh preciso de um evento. Na Benev se usa muito o event bridge (antigo CloudWatch). Voce manda um event para um eventBus
+que depois encaminha para seu lambda de acordo com uma regra.  eh possivel ser atraves de uma noticacao tambem de um s3bucket etc
+
+google: eventbridge eventbus
+bom artigo medium: https://medium.com/dev-axe/aws-amazon-eventbridge-event-bus-explained-ad52ec36d185
+
+google: what is amazon event bus
+https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-bus.html
+"An event bus is a router that receives events and delivers them to zero or more destinations, or targets.
+Event buses are well-suited for routing events from many sources to many targets, with optional transformation of events prior to delivery to a target."
+
+um conceito importante nos lambdas eh o runtime: basicamente eh a linguagem e versao usada no lambda. Ex: Java 17, Node 20 etc
+
+As lambdas vem com uma funcionalidade embutida para testar no console. Tambem eh possivel ver as versoes etc
+
 
 
 
