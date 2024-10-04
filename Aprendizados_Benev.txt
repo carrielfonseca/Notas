@@ -66,6 +66,9 @@ Atencao: Isso normalmente nao eh levado em consideracao quando rodamos teste Spr
 O que fiz como solucao: simples, fiz uma bean de configuracao nos testes com @PostConstruct TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 ---
 Relembrei mockito https://www.baeldung.com/java-spring-mockito-mock-mockbean
+Tbem achei outro link interessante: https://www.toptal.com/java/a-guide-to-everyday-mockito
+"Mockito requires you to provide all arguments either by matchers or by exact values.
+So if a method has more than one argument and you want to use argument matchers for only some of its arguments, it can’t be done"
 ---
 Usar Clock Java para fazer Time Travel na aplicacao Java de batch: boa solucao do Eric
 https://medium.com/@aleksanderkolata/time-travel-in-java-do-you-have-a-clock-3c9060059561
