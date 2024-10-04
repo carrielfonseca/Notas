@@ -160,6 +160,12 @@ um conceito importante nos lambdas eh o runtime: basicamente eh a linguagem e ve
 
 As lambdas vem com uma funcionalidade embutida para testar no console. Tambem eh possivel ver as versoes etc
 
+OTIMO VIDEO para entender:
+you tube: event bridge lambda
+https://www.youtube.com/watch?v=ih61Ia1b7fM
+
+*******************************************************************************
+
 
 
 
