@@ -2,7 +2,7 @@
 -----------------------------Arquitetura Geral dos projetos---------------------- 
 -----------------------------------------------------------------------------------
 
-Os projetos sao na AWS com uma arquiteura interessante:  um conta eh usada para os servicos AWS em geral como SQS, S3Bucket etc
+Os projetos sao na AWS com uma arquitura interessante:  um conta eh usada para os servicos AWS em geral como SQS, S3Bucket etc
 Esse servicos sao criados por um repositorio de infra (ex: finance-infra) com scripts de Terrafrom. Os modulos Terraform sao subidos 
 fazendo referencia a blueprints ja feitos pela empresa e com uma url do repositorio github desses blueprints
 Um outro repositorio github existe de tipo flux (ex: flux-finance). Esse repositorio guarda as variaveis de environment 
@@ -21,6 +21,9 @@ Esse conceito tambem existe na SQS, mas pelo blueprint criado pela empresam, a D
 
 Tecnologias Devops usadas: Flux, Helm, AWS, Kuberntes, Terraform, Jenkins
 Documentei isso em um arquivo especifico separado
+
+Interessante a arquitetura de joint table para poder fazer auditoria das transacoes agregadas (aprendi tbem a questao de commit transactions na base de dados,
+que tem tbem uma nocao de estado intermediario parecido com a nocao de stage do GIT) 
 
 
 
