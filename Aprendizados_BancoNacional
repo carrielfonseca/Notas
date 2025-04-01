@@ -1,0 +1,35 @@
+************************************************************************************
+**********************Arquitetura Geral dos projetos********************************
+************************************************************************************
+
+Se usa uma configmap para guardar na verdade os arquivos dos objetos Kubernetes (pods, deployments etc)
+Entao se usa o comando kubectl apply passando esse arquivo de configmap como argumento usando um pipe
+https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
+" # Apply the JSON passed into stdin to a pod
+  cat pod.json | kubectl apply -f -"
+
+Uma coisa que eh interessante: Um pouco parecido com o que a Benev fazia em alguns projetos:
+Tinha um pipeline de:
+- deploy flyway 
+- deploy normal (mudava a versao da aplicacao)
+- Loader (rodsava a aplicacao com certos argumentos (program arguments))
+- Application (pipeline da aplicacao em si: fazia o build e publicava a imagem no Nesus (nao usa ECR da amazon para guardar as imagens como a Benev))
+
+Possuem um cluster unico com varios namespaces
+
+usei o k9s ajudou muito para navegar no projeto
+
+******************************************Variados***********************************************************
+
+--- 
+lembrando como dah para usar JAVA_OPTS no Docker file na Benev: apenas uma convencao se for usar
+https://stackoverflow.com/questions/2011311/running-java-with-java-opts-env-variable-has-no-effect
+
+---
+Spring Batch mantem um contador de commits para cada chunk do reader / processor write. Isso permite que ele retome o job de maneira idempotente
+Ver tabelas de Batch_Execution e Step_Execution
+---
+Como na Benev, os scrips de criacao das tabelas do Spring Batch (Batch_Execution etc) foram externalizados para o flyway explicitamente (ver arquivo de aprendizados_Benev  tbem)
+Dash para achar esses arquivos navegando pela biblioteca
+
+

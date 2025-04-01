@@ -18,6 +18,7 @@ Producer
 Client
 Parser
 Strategy
+Filter
 
 Gostei tbem do curso Plural Sight sobre clean code: primitive obsession.
 Por exemplo, podemos u objeto HttpRequest para fazer um wrapper de todos os parametros necessarios (ou SqlParams etc)
