@@ -41,7 +41,7 @@ piping and redirecting (see page 40 of Algorithms book, 4th edition)
 #Creates a shortcut on Linux
 ln -s ~/Postman ~/Desktop (tilde means the home directory)
 ps aux     (lists the processes running  (think this came from the Docker course))
-whereis java (needs to be executable files)
+whereis java (needs to be executable files) . No Banco Nacional: uso where java (talvez whereis ficou deprecated)
 which
 sudo chmod -R 777 *    (Kateryna did this one to give full access to everyone in the config folder. Sorta dangerous) 
 

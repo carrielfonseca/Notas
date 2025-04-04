@@ -6,3 +6,8 @@
 /.vs/Notas/v17/DocumentLayout.json
 /.vs/slnx.sqlite
 /.vs/VSWorkspaceState.json
+/.vs/Notas/FileContentIndex/70c1d66e-ca96-49bc-86a4-fcaec5ec304e.vsidx
+/.vs/Notas/FileContentIndex/737f0970-603d-4610-8300-2a5792b42db6.vsidx
+*.vsidx
+*.sqlite-journal
+/.vs/Notas/v17/DocumentLayout.backup.json

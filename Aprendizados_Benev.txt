@@ -143,6 +143,14 @@ Posso acessar o h2 console se eu bloquear apenas a thread no debugger
 Interessante o conceito de DLQ: se nao processa a chamada, manda o payload para essa DLQ que depois pode ser
 relancada por alguem
 
+-----
+O que vi com o PA de design interessante: Fiz um array de objetos MergeParams que guardava simplesmente duas strings: sourceTable e targetTable
+Depois fazia uma interface MergeStrategy e que a diferenca de implementacao era esse array interno
+
+-----
+Ponto alto do meu design: fiz sumOfRound vs RoundOfSum para calcular um problema de arredondamento e lancar uma linha
+Ficou bem interessante
+
 
 -----------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
@@ -850,6 +858,8 @@ https://gokhana.dev/reactive-programming-with-spring-webflux/#:~:text=Spring%20W
 Com esse ticket: APRENDI: filters e interceptors (MUITO INTERESSANTE).
 Tbem temos uma bilioteca Zalando para logar 
 https://github.com/zalando/logbook/blob/main/logbook-httpclient/src/main/java/org/zalando/logbook/httpclient/LogbookHttpResponseInterceptor.java
+O que tinha de interessante: PA tinha feito uma biblitoeca com um http interceptor que registrava as requests e responses no s3 bucket
+para usa-la depois: usava um @Import de Spring do componente da biblioteca
 
 ---(tests) 
 google: should you avoid for loops in spring webflux 

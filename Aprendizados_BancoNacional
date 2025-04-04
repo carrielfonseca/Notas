@@ -12,7 +12,7 @@ Uma coisa que eh interessante: Um pouco parecido com o que a Benev fazia em algu
 Tinha um pipeline de:
 - deploy flyway 
 - deploy normal (mudava a versao da aplicacao)
-- Loader (rodsava a aplicacao com certos argumentos (program arguments))
+- Loader (rodava a aplicacao com certos argumentos (program arguments))
 - Application (pipeline da aplicacao em si: fazia o build e publicava a imagem no Nesus (nao usa ECR da amazon para guardar as imagens como a Benev))
 
 Possuem um cluster unico com varios namespaces
@@ -31,5 +31,11 @@ Ver tabelas de Batch_Execution e Step_Execution
 ---
 Como na Benev, os scrips de criacao das tabelas do Spring Batch (Batch_Execution etc) foram externalizados para o flyway explicitamente (ver arquivo de aprendizados_Benev  tbem)
 Dash para achar esses arquivos navegando pela biblioteca
+
+--
+comando Linux where para saber onde estah o executavel do comando
+---
+Tambem tem uma arquitetura de fazer uma tabela na BD de staging que salva sem validacao.
+Depois de rodar um processo de validacao, entao salva na tabela de fato
 
 
